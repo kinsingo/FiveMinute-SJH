@@ -1,0 +1,50 @@
+{
+  "compilerOptions": {
+    "target": "ES2017",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "allowJs": true,
+    "skipLibCheck": true,
+    "strict": true, //모든 엄격한 타입 검사 옵션을 활성화합니다. (it's also MUI typescript requirements)
+    "noEmit": true, //Do not emit outputs.
+    "esModuleInterop": true,
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "resolveJsonModule": true,
+    "isolatedModules": true, //모듈은 각자 독립적으로 컴파일되어야 합니다. 이 옵션은 모듈을 독립적으로 컴파일하고 캐시에 저장하여 다시 컴파일하지 않도록 합니다.
+
+    //jsx: "preserve" 설정으로 인해 TypeScript가 JSX 코드를 제거하지 않고 그대로 유지합니다. 이는 JSX 코드를 Babel 또는 다른 도구로 처리하기 위해 남겨둡니다.
+    //ts 파일은 일반적으로 TypeScript 문법만을 처리하며, JSX 관련 규칙이 적용되지 않습니다. (JSX 사용 불가, 엄격한 타입 체크(모든 변수, 함수, 객체의 타입을 명시적으로 지정))
+    //tsx 파일은 TypeScript와 JSX를 함께 사용할 수 있도록 설계되었습니다. 따라서 JSX와 관련된 추가 규칙이 적용됩니다. (JSX 지원, tsx 파일에서 JSX 코드를 사용하는 함수의 반환 타입은 자동으로 JSX.Element로 추론됨)
+    //jsx: "preserve" 설정으로 인해, tsx 파일은 컴파일 후에도 JSX 코드가 남아있습니다.
+    //반면, ts 파일은 TypeScript만 처리하므로 컴파일 후 순수 JavaScript 코드만 생성됩니다.
+    "jsx": "preserve",
+    "incremental": true,
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+
+    //added by SJH (MUI typescript requirements)
+    "noImplicitAny": true, //암시적 any 타입을 허용하지 않습니다.
+    "noImplicitThis": true, //this가 any 타입으로 간주되지 않도록 합니다.
+    "strictNullChecks": true, //null 및 undefined를 각각의 타입으로 간주합니다.
+    "allowSyntheticDefaultImports": true, //default import를 사용할 수 있도록 합니다.
+
+    //added by SJH
+    "noUnusedLocals": true, //사용되지 않는 지역 변수를 허용하지 않습니다.
+    "noUnusedParameters": true, //사용되지 않는 매개변수를 허용하지 않습니다.
+    "noImplicitReturns": true //모든 함수가 반환 값을 가지도록 강제합니다. (void 는 제외)
+  },
+  "include": [
+    "next-env.d.ts",
+    "new-types.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".next/types/**/*.ts",
+  ],
+  "exclude": ["node_modules"]
+}

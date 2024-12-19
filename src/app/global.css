@@ -1,0 +1,28 @@
+/* Global Import For slick-carousel 
+slick-carousel is a library that adds slider (carousel) functionality to a web page, 
+allowing multiple pieces of content to be displayed in a sliding format.
+*/
+.slick-initialized .slick-slide {
+  display: block;
+  padding: 40px 0;
+}
+
+.slick-slide.slick-cloned {
+  outline: 0;
+}
+
+.slick-slide {
+  margin: 0px 10px;
+  transition: all ease-in-out 0.3s;
+  opacity: 0.5;
+}
+.slick-active {
+  opacity: 0.5;
+}
+.slick-current {
+  opacity: 1;
+}
+
+
+
+/* Global Import For ~~~~ */
