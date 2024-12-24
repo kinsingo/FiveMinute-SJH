@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>resources/DarkModeTheme_InfoTheme.png</file>
+        <file>resources/home_warningTheme.png</file>
+        <file>resources/info_InfoTheme.png</file>
+        <file>resources/LightModeTheme_InfoTheme.png</file>
+        <file>resources/LoadSetting_InfoTheme.png</file>
+        <file>resources/Log_warningTheme.png</file>
+        <file>resources/result_warningTheme.png</file>
+        <file>resources/save_InfoTheme.png</file>
+        <file>resources/AI_BMT_Middle_Icon.png</file>
+    </qresource>
+</RCC>

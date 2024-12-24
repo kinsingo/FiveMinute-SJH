@@ -1,0 +1,15 @@
+
+1. windeployqt 실행
+   windeployqt your-qt-app-binary
+
+2. 추가 옵션
+windeployqt에도 다양한 옵션이 있습니다. 몇 가지 유용한 옵션을 소개하면:
+--no-plugins: Qt 플러그인들을 포함하지 않습니다.
+--no-translations: 번역 파일들을 포함하지 않습니다.
+--qmldir <path>: QML 파일이 있는 디렉토리를 지정합니다.
+--release: 배포를 위한 릴리스 모드로 설정합니다.
+--no-angle: ANGLE 대신 OpenGL을 사용하도록 설정합니다.
+--compiler-runtime: 필요한 컴파일러 런타임을 복사합니다. <-- 이 옵션 사용 권장!
+
+3. [QT 6.7.2 (MinGW 11.2.0 64-bit) Terminal 에서 실행 예제]
+windeployqt6.exe C:\SJH_Programs\SNU_BMT_GUI\build\Desktop_Qt_6_7_2_MinGW_64_bit-Release\SNU_AI_BMT_GUI.exe --release --no-translations --compiler-runtime
