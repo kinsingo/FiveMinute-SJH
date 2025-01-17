@@ -1,11 +1,9 @@
-import { Image, StyleSheet, Platform } from 'react-native';
-
-import { HelloWave } from '@/components/HelloWave';
+import { Image, StyleSheet, Platform, View } from 'react-native';
 import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+import { Text, useTheme  } from 'react-native-paper'
 
 export default function HomeScreen() {
+  const theme = useTheme();
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
@@ -15,41 +13,40 @@ export default function HomeScreen() {
           style={styles.reactLogo}
         />
       }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
+      <View style={styles.titleContainer}>
+        <Text style={theme.fonts.headlineMedium}>Welcome!</Text>
+      </View>
+      <View style={styles.stepContainer}>
+        <Text style={theme.fonts.headlineMedium}>Step 1: Try it</Text>
+        <Text>
+          Edit <Text style={theme.fonts.headlineMedium}>app/(tabs)/index.tsx</Text> to see changes.
           Press{' '}
-          <ThemedText type="defaultSemiBold">
+          <Text style={theme.fonts.headlineMedium}>
             {Platform.select({
               ios: 'cmd + d',
               android: 'cmd + m',
               web: 'F12'
             })}
-          </ThemedText>{' '}
+          </Text>{' '}
           to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
+        </Text>
+      </View>
+      <View style={styles.stepContainer}>
+        <Text style={theme.fonts.headlineMedium}>Step 2: Explore</Text>
+        <Text>
           Tap the Explore tab to learn more about what's included in this starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
+        </Text>
+      </View>
+      <View style={styles.stepContainer}>
+        <Text style={theme.fonts.headlineMedium}>Step 3: Get a fresh start</Text>
+        <Text>
           When you're ready, run{' '}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
+          <Text style={theme.fonts.headlineMedium}>npm run reset-project</Text> to get a fresh{' '}
+          <Text style={theme.fonts.headlineMedium}>app</Text> directory. This will move the current{' '}
+          <Text style={theme.fonts.headlineMedium}>app</Text> to{' '}
+          <Text style={theme.fonts.headlineMedium}>app-example</Text>.
+        </Text>
+      </View>
     </ParallaxScrollView>
   );
 }
