@@ -17,7 +17,7 @@ import {
 } from "react-native-paper";
 import merge from "deepmerge";
 import { useState, useCallback, useMemo } from "react";
-import ThemeModeContext from "../context/ThemeModeContext";
+import ThemeModeContext from "../store/context/ThemeModeContext";
 import Header from "../components/Header";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -74,7 +74,7 @@ export default function RootLayout() {
             <Stack.Screen name="(tabs)" options={{ headerShown: true, title: "5분 덮밥" }} />
             <Stack.Screen name="+not-found" />
           </Stack>
-          <StatusBar style="auto" />
+          <StatusBar style={isThemeDark ? "light" : "dark"} />
         </ThemeProvider>
       </PaperProvider>
     </ThemeModeContext.Provider>

@@ -1,6 +1,6 @@
 import React, { useState, useContext } from "react";
 import { useTheme, Appbar, Switch, Text, Menu } from "react-native-paper";
-import ThemeModeContext from "../context/ThemeModeContext";
+import ThemeModeContext from "../store/context/ThemeModeContext";
 import { getHeaderTitle } from "@react-navigation/elements";
 
 export default function Header({ navigation, route, options, back }: any) {
@@ -30,7 +30,7 @@ export default function Header({ navigation, route, options, back }: any) {
 
       {/* 테마 전환 스위치 */}
       <Text style={{ marginHorizontal: 5 }}>{isThemeDark ? "Dark" : "Light"}</Text>
-      <Switch color={"red"} value={isThemeDark} onValueChange={toggleTheme} />
+      <Switch value={isThemeDark} onValueChange={toggleTheme} />
 
       {/* 메뉴 버튼 */}
       {!back && (
@@ -45,18 +45,21 @@ export default function Header({ navigation, route, options, back }: any) {
           }
         >
           <Menu.Item
+            leadingIcon={"pencil"}
             onPress={() => {
               console.log("Option 1 was pressed");
             }}
             title="Option 1"
           />
           <Menu.Item
+            leadingIcon={"delete"}
             onPress={() => {
               console.log("Option 2 was pressed");
             }}
             title="Option 2"
           />
           <Menu.Item
+            leadingIcon={"check"}
             onPress={() => {
               console.log("Option 3 was pressed");
             }}

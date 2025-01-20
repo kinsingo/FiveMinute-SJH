@@ -25,8 +25,17 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarIcon: ({ color }) => (
-            <IconSymbol size={28} name="house.fill" color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <IconSymbol size={size} name="house.fill" color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="authentication"
+        options={{
+          title: "login",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="log-in" size={size} color={color} />
           ),
         }}
       />
@@ -34,17 +43,17 @@ export default function TabLayout() {
         name="inventory"
         options={{
           title: "inventory",
-          tabBarIcon: ({ color }) => (
-            <MaterialIcons name="inventory" size={28} color={color} />
+          tabBarIcon: ({ color, size }) => (
+            <MaterialIcons name="inventory" size={size} color={color} />
           ),
         }}
       />
       <Tabs.Screen
-        name="stackTest"
+        name="attendance"
         options={{
-          title: "Stack Test",
-          tabBarIcon: ({ color }) => (
-            <Ionicons name="star" size={28} color={color} />
+          title: "Attendance",
+          tabBarIcon: ({ color, size }) => (
+            <Ionicons name="calendar" size={size} color={color} />
           ),
         }}
       />

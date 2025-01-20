@@ -1,71 +1,33 @@
-import { Image, StyleSheet, Platform, View } from 'react-native';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { Text, useTheme  } from 'react-native-paper'
+import { Image, StyleSheet, View, ScrollView } from "react-native";
+import { Text, useTheme } from "react-native-paper";
 
 export default function HomeScreen() {
   const theme = useTheme();
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
+    <ScrollView>
+      <View style={{ height: 250 }}>
         <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
+          source={require("@/assets/images/Main-Page.png")}
+          style={{ width: "100%", height: "100%" }}
+          resizeMode="cover"
         />
-      }>
-      <View style={styles.titleContainer}>
-        <Text style={theme.fonts.headlineMedium}>Welcome!</Text>
       </View>
-      <View style={styles.stepContainer}>
-        <Text style={theme.fonts.headlineMedium}>Step 1: Try it</Text>
-        <Text>
-          Edit <Text style={theme.fonts.headlineMedium}>app/(tabs)/index.tsx</Text> to see changes.
-          Press{' '}
-          <Text style={theme.fonts.headlineMedium}>
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12'
-            })}
-          </Text>{' '}
-          to open developer tools.
-        </Text>
+      <View style={{ padding: 32 }}>
+        <Text variant="headlineMedium">Welcome!</Text>
+        <Text variant="bodyMedium">5분 덮밥 JMT (소개글 추가)</Text>
       </View>
-      <View style={styles.stepContainer}>
-        <Text style={theme.fonts.headlineMedium}>Step 2: Explore</Text>
-        <Text>
-          Tap the Explore tab to learn more about what's included in this starter app.
-        </Text>
-      </View>
-      <View style={styles.stepContainer}>
-        <Text style={theme.fonts.headlineMedium}>Step 3: Get a fresh start</Text>
-        <Text>
-          When you're ready, run{' '}
-          <Text style={theme.fonts.headlineMedium}>npm run reset-project</Text> to get a fresh{' '}
-          <Text style={theme.fonts.headlineMedium}>app</Text> directory. This will move the current{' '}
-          <Text style={theme.fonts.headlineMedium}>app</Text> to{' '}
-          <Text style={theme.fonts.headlineMedium}>app-example</Text>.
-        </Text>
-      </View>
-    </ParallaxScrollView>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   titleContainer: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: 8,
   },
   stepContainer: {
     gap: 8,
     marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
   },
 });
