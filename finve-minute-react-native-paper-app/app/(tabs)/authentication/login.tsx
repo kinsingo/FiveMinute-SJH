@@ -1,15 +1,43 @@
-import {useState} from "react";
+import { useEffect, useState } from "react";
+import ExternalLink from "@/components/ExternalLink";
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
+import { IsLogin, SignIn, Logout } from "@/components/login/auth";
+import React from "react";
 
 export default function SignInScreen() {
   const theme = useTheme();
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [email, setEmail] = useState({ value: "", IsValid: true });
+  const [password, setPassword] = useState({ value: "", IsValid: true });
+  const [loading, setLoading] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
+
   const [actionMessage, setActionMessage] = useState({
+    success: true,
     message: "",
     subMessage: "",
   });
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const isLogin = await IsLogin();
+      setIsLogin(isLogin.success);
+      if (isLogin.success) {
+        setActionMessage({
+          success: true,
+          message: "로그인 성공",
+          subMessage: isLogin.message,
+        });
+      } else {
+        setActionMessage({
+          success: false,
+          message: "로그인이 필요합니다",
+          subMessage: isLogin.message,
+        });
+      }
+    };
+    checkLogin();
+  }, []);
 
   const [showPassword, setShowPassword] = useState(false);
 
@@ -17,21 +45,87 @@ export default function SignInScreen() {
     setShowPassword((prev) => !prev); // true <-> false 토글
   };
 
-  const handleSignIn = () => {
-    // TODO: Replace with your sign-in logic
-    if (!email || !password) {
-      setActionMessage({
-        message: "로그인 실패",
-        subMessage: "이메일과 비밀번호를 입력해주세요.",
-      });
+  const handleSignIn = async () => {
+    if (isLogin) {
+      setLoading(true);
+      const response = await Logout();
+      if (response) {
+        setActionMessage({
+          success: true,
+          message: "로그아웃 성공",
+          subMessage: "",
+        });
+        setIsLogin(false);
+      } else {
+        setActionMessage({
+          success: false,
+          message: "로그아웃 실패",
+          subMessage: "로그아웃 중 오류가 발생했습니다.",
+        });
+      }
+      setLoading(false);
       return;
     }
 
-    // Example: Reset messages on successful login
-    setActionMessage({
-      message: "로그인 성공",
-      subMessage: "환영합니다!",
-    });
+    // TODO: Replace with your sign-in logic
+    if (!email.value) {
+      setEmail((prev) => ({ ...prev, isValid: false }));
+      setActionMessage({
+        success: false,
+        message: "로그인 실패",
+        subMessage: "이메일을 입력해주세요.",
+      });
+      setIsLogin(false);
+      return;
+    } else {
+      setEmail((prev) => ({ ...prev, isValid: true }));
+    }
+
+    if (!password.value) {
+      setPassword((prev) => ({ ...prev, isValid: false }));
+      setActionMessage({
+        success: false,
+        message: "로그인 실패",
+        subMessage: "비밀번호를 입력해주세요.",
+      });
+      setIsLogin(false);
+      return;
+    } else {
+      setPassword((prev) => ({ ...prev, isValid: true }));
+    }
+
+    setLoading(true);
+    try {
+      const data = await SignIn({
+        email: email.value,
+        password: password.value,
+      });
+      if (data.success) {
+        setActionMessage({
+          success: true,
+          message: "로그인 성공",
+          subMessage: `환영합니다, ${data.user.email}!`,
+        });
+        setIsLogin(true);
+      } else {
+        setActionMessage({
+          success: false,
+          message: "로그인 실패",
+          subMessage: data.message,
+        });
+        setIsLogin(false);
+      }
+    } catch (error: any) {
+      setActionMessage({
+        success: false,
+        message: "오류 발생",
+        subMessage:
+          error.response?.data?.message ||
+          "서버와 통신 중 오류가 발생했습니다.",
+      });
+      setIsLogin(false);
+    }
+    setLoading(false);
   };
 
   return (
@@ -50,13 +144,22 @@ export default function SignInScreen() {
                 { backgroundColor: theme.colors.primaryContainer },
               ]}
             >
-              로그인
+              5분 덮밥
             </Text>
             <Text variant="bodyMedium" style={styles.subHeaderText}>
               Enter your email and password to sign in
             </Text>
             {actionMessage.message ? (
-              <Text style={styles.actionMessage}>
+              <Text
+                style={[
+                  styles.actionMessage,
+                  {
+                    color: actionMessage.success
+                      ? theme.colors.primary
+                      : theme.colors.error,
+                  },
+                ]}
+              >
                 {actionMessage.message}
                 {"\n"}
                 {actionMessage.subMessage}
@@ -65,28 +168,53 @@ export default function SignInScreen() {
           </View>
 
           <View style={styles.form}>
-            <TextInput
-              label="Email"
-              mode="outlined"
-              value={email}
-              onChangeText={setEmail}
-              style={styles.input}
-              keyboardType="email-address"
-            />
-            <TextInput
-              label="Password"
-              mode="outlined"
-              value={password}
-              onChangeText={setPassword}
-              style={styles.input}
-              secureTextEntry={!showPassword} // showPassword가 true일 때 텍스트 표시
-              right={
-                <TextInput.Icon
-                  icon={showPassword ? "eye-off" : "eye"} // 아이콘 변경
-                  onPress={togglePasswordVisibility} // 클릭 시 토글 함수 호출
+            {!isLogin && (
+              <>
+                <TextInput
+                  label="Email"
+                  mode="outlined"
+                  value={email.value}
+                  onChangeText={(text) => setEmail({ ...email, value: text })}
+                  disabled={loading}
+                  style={[
+                    styles.input,
+                    !email.IsValid && {
+                      backgroundColor: theme.colors.errorContainer,
+                    },
+                    email.IsValid && {
+                      backgroundColor: theme.colors.background,
+                    },
+                  ]}
+                  keyboardType="email-address"
                 />
-              }
-            />
+                <TextInput
+                  label="Password"
+                  mode="outlined"
+                  value={password.value}
+                  onChangeText={(text) =>
+                    setPassword({ ...password, value: text })
+                  }
+                  disabled={loading}
+                  style={[
+                    styles.input,
+                    !password.IsValid && {
+                      backgroundColor: theme.colors.errorContainer,
+                    },
+                    password.IsValid && {
+                      backgroundColor: theme.colors.background,
+                    },
+                  ]}
+                  secureTextEntry={!showPassword} // showPassword가 true일 때 텍스트 표시
+                  right={
+                    <TextInput.Icon
+                      icon={showPassword ? "eye-off" : "eye"} // 아이콘 변경
+                      onPress={togglePasswordVisibility} // 클릭 시 토글 함수 호출
+                    />
+                  }
+                />
+              </>
+            )}
+
             <Button
               mode="contained"
               onPress={handleSignIn}
@@ -94,27 +222,37 @@ export default function SignInScreen() {
                 styles.button,
                 { backgroundColor: theme.colors.primaryContainer },
               ]}
+              disabled={loading}
             >
               <Text variant="bodyLarge" style={{ fontWeight: "bold" }}>
-                SIGN IN
+                {isLogin && "로그아웃"}
+                {!isLogin && "로그인"}
               </Text>
             </Button>
           </View>
 
-          <View style={styles.footer}>
-            <Text variant="bodyMedium">
-              계정이 없으신가요?{" "}
-              <Text style={styles.link} onPress={() => {}}>
-                회원가입
+          {!isLogin && (
+            <View style={styles.footer}>
+              <Text variant="bodyMedium">
+                계정이 없으신가요?{" "}
+                <ExternalLink
+                  style={styles.link}
+                  href="https://www.5minbowl.com/authentication/register"
+                >
+                  회원가입
+                </ExternalLink>
               </Text>
-            </Text>
-            <Text variant="bodyMedium">
-              비밀번호를 잊으셨나요?{" "}
-              <Text style={styles.link} onPress={() => {}}>
-                여기서 재설정
+              <Text variant="bodyMedium">
+                비밀번호를 잊으셨나요?{" "}
+                <ExternalLink
+                  style={styles.link}
+                  href="https://www.5minbowl.com/authentication/forget-password"
+                >
+                  여기서 재설정
+                </ExternalLink>
               </Text>
-            </Text>
-          </View>
+            </View>
+          )}
         </Card>
       </View>
     </ImageBackground>
