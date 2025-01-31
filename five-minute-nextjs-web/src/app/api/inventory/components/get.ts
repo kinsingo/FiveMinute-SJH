@@ -4,7 +4,7 @@ import { getPublicCollection } from "@/MongoDB/db-manager";
 export default async function GETModule(collectionName: string) {
   try {
     const collection = await getPublicCollection(collectionName);
-
+    
     // 가장 최신 데이터 가져오기
     const latestDocument = await collection
       .find({})

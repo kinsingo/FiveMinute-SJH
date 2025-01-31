@@ -1,25 +1,12 @@
-import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import {Link} from 'expo-router';
+import React from "react";
+import StatusModule from "@/components/inventory/statusModule";
+import { useInventoryItemsMap } from "@/hooks/useInventoryItemsMap";
+import { ActivityIndicator } from 'react-native-paper';
 
-const Page = () => {
-    return (
-        <View style={styles.container}>
-            <Text style={styles.text}>강남점 재고 상태</Text>
-        </View>
-    );
-};
-
-const styles = StyleSheet.create({
-    container: {
-        flex: 1,
-        justifyContent: 'center',
-        alignItems: 'center',
-    },
-    text: {
-        fontSize: 20,
-        color: '#333',
-    },
-});
-
-export default Page;
+export default function Status() {
+  const { itemsMap, loading } = useInventoryItemsMap("https://www.5minbowl.com/api/inventory-status/Gangnam");
+  if (loading) {
+    return <ActivityIndicator style={{ flex: 1 }} size="large" animating={true} />;
+  }
+  return <StatusModule itemsMap={itemsMap} />;
+}
