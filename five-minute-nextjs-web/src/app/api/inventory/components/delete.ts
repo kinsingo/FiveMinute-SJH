@@ -34,7 +34,7 @@ export default async function DeleteModule(
       { status: 200 }
     );
   } catch (err) {
-    console.error("Error deleting document:", err);
+    console.error("Error deleting document:", err);//error handling is necessary for Typescript
     return NextResponse.json(
       { error: "Failed to delete document" },
       { status: 500 }

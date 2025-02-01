@@ -7,3 +7,6 @@
 
 ## 250131
 1) Auth쪽 구현함. 이게 Token 관리 방식이 Web 과 App 같이 사용하면 꼬일수 있음. Web 은 기존 NextAuth, App은 JWT 방식 Backend API 적용
+
+## 250202
+1) 재고관리쪽 구현 완료

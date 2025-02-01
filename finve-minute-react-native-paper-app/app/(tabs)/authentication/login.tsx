@@ -1,9 +1,11 @@
-import { useEffect, useState } from "react";
+import { useState, useCallback } from "react";
 import ExternalLink from "@/components/ExternalLink";
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
 import { IsLogin, SignIn, Logout } from "@/components/login/auth";
 import React from "react";
+import { useFocusEffect } from "@react-navigation/native";
+import { ActivityIndicator } from "react-native-paper";
 
 export default function SignInScreen() {
   const theme = useTheme();
@@ -11,35 +13,46 @@ export default function SignInScreen() {
   const [password, setPassword] = useState({ value: "", IsValid: true });
   const [loading, setLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(false);
-
+  const [isLoginCheckProgress, setIsLoginCheckProgress] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  
   const [actionMessage, setActionMessage] = useState({
     success: true,
     message: "",
     subMessage: "",
   });
 
-  useEffect(() => {
-    const checkLogin = async () => {
-      const isLogin = await IsLogin();
-      setIsLogin(isLogin.success);
-      if (isLogin.success) {
-        setActionMessage({
-          success: true,
-          message: "로그인 성공",
-          subMessage: isLogin.message,
-        });
-      } else {
-        setActionMessage({
-          success: false,
-          message: "로그인이 필요합니다",
-          subMessage: isLogin.message,
-        });
-      }
-    };
-    checkLogin();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      const checkLogin = async () => {
+        setIsLoginCheckProgress(true);
+        const isLogin = await IsLogin();
+        setIsLogin(isLogin.success);
+        if (isLogin.success) {
+          setActionMessage({
+            success: true,
+            message: "로그인 성공",
+            subMessage: isLogin.message,
+          });
+        } else {
+          setActionMessage({
+            success: false,
+            message: "로그인이 필요합니다",
+            subMessage: isLogin.message,
+          });
+        }
+        setIsLoginCheckProgress(false);
+      };
+      checkLogin();
+    }, [])
+  );
 
-  const [showPassword, setShowPassword] = useState(false);
+  if(isLoginCheckProgress)
+    return <ActivityIndicator style={{ flex: 1 }} size="large" animating={true} />
+
+ 
+
+
 
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev); // true <-> false 토글

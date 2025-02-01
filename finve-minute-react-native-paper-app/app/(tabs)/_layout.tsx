@@ -2,21 +2,16 @@
 import React from "react";
 import { Tabs } from "expo-router";
 import { HapticTab } from "@/components/HapticTab";
-import { IconSymbol } from "@/components/ui/IconSymbol";
-import { Colors } from "@/constants/Colors";
-import { useColorScheme } from "@/hooks/useColorScheme";
 import { Ionicons } from "@expo/vector-icons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
-import { createMaterialBottomTabNavigator } from "react-native-paper/react-navigation";
-
-const Tab = createMaterialBottomTabNavigator();
+import { useTheme } from "react-native-paper";
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const theme=useTheme();
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? "light"].tint,
+        tabBarActiveTintColor: theme.colors.primary,
         headerShown: false,
         tabBarButton: HapticTab,
       }}
@@ -26,7 +21,7 @@ export default function TabLayout() {
         options={{
           title: "Home",
           tabBarIcon: ({ color, size }) => (
-            <IconSymbol size={size} name="house.fill" color={color} />
+            <MaterialIcons name="home" size={size} color={color} />
           ),
         }}
       />

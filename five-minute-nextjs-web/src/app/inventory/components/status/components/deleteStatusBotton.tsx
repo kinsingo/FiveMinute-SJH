@@ -26,14 +26,14 @@ export default function DeleteStatusButton({
 
   async function handleDelete() {
     if (currentUserEmail !== documentEmail) {
-      setError("현재 로그인된 사용자만 데이터를 삭제할 수 있습니다.");
-      return;
+      setError(`데이터 삭제는 ${documentEmail}만 가능\n (현재 로그인: ${currentUserEmail})`);
+    return;
     }
     setIsDeleting(true);
     try {
       setError(null); // 기존 오류 초기화
       const response = await fetch(fetchDeleteDataPath, {
-        method: "POST",
+        method: "DELETE",
         body: JSON.stringify({ id: documentId }),
         headers: {
           "Content-Type": "application/json",

@@ -3,12 +3,13 @@ import * as SecureStore from "expo-secure-store";
 
 const AUTH_URL = "https://www.5minbowl.com/api/react-native-app-auth"; // Next.js Auth API 경로
 const TOKEN_KEY = "authToken"; // SecureStore에 저장할 토큰 키
-
+const EMAIL_KEY = "userEmail"; // SecureStore에 저장할 이메일 키
 
 // ✅ JWT 저장 함수
-const saveToken = async (token:string) => {
+const saveTokenAndEmail = async (token:string, email:string) => {
     try {
       await SecureStore.setItemAsync(TOKEN_KEY, token);
+      await SecureStore.setItemAsync(EMAIL_KEY, email);
     } catch (error) {
       console.error("🔴 JWT 저장 실패:", error);
     }
@@ -22,6 +23,15 @@ const saveToken = async (token:string) => {
       return null;
     }
   };
+
+  // ✅ 저장된 Email 가져오기 함수
+const getEmail = async () => {
+  try {
+    return await SecureStore.getItemAsync(EMAIL_KEY);
+  } catch (error) {
+    return null;
+  }
+};
   
   // ✅ JWT 삭제 함수 (로그아웃)
   const removeToken = async () => {
@@ -54,9 +64,8 @@ export const IsLogin = async (): Promise<any> => {
 export const SignIn = async ({ email, password }: { email: string; password: string }): Promise<any> => {
     try {
         const response = await axios.post(AUTH_URL, { email, password });
-    
         if (response.data.success) {
-          await saveToken(response.data.token); // ✅ JWT 저장
+          await saveTokenAndEmail(response.data.token, email); // ✅ JWT 저장
           return { success: true, user: response.data.user };
         } else {
           return { success: false, message: response.data.message };
@@ -74,3 +83,8 @@ export const Logout = async () => {
         return false;
       }
   };
+
+// ✅ 현재 로그인한 유저 이메일 가져오는 함수
+export const GetCurrentUserEmail = async () => {
+  return await getEmail();
+};
