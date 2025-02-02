@@ -5,9 +5,11 @@ import axios from "axios";
 import { Row } from "@/components/inventory/components/TableComponents";
 import { TableType } from "@/components/inventory/components/status/components/tableSelector";
 import { Item } from "@/components/inventory/components/status/statusModule";
-import {GetCurrentUserEmail} from "@/components/login/auth";
+import { useContext } from "react";
+import { AuthContext } from "@/store/context/AuthContext";
 
 export const useInventoryItemsMap = (apiUrl: string) => {
+  const auth = useContext(AuthContext);
   const [itemsMap, setItemsMap] = useState<Record<TableType, Item>>({
     [TableType.Latest]: { email: "", timestamp: "", inventoryData: [],id:"" },
     [TableType.Previous1]: { email: "", timestamp: "", inventoryData: [],id:""},
@@ -37,7 +39,7 @@ export const useInventoryItemsMap = (apiUrl: string) => {
         return acc;
       }, {} as Record<TableType, Item>);
       setItemsMap(newItemsMap);
-      const userEmail = await GetCurrentUserEmail() as string;
+      const userEmail = await auth.getCurrentUserEmail() as string;
       setCurrentUserEmail(userEmail);
     } catch (error) {
       Alert.alert("Database 접근 오류:" + error);

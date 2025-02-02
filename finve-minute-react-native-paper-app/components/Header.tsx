@@ -2,6 +2,7 @@ import React, { useState, useContext } from "react";
 import { useTheme, Appbar, Switch, Text, Menu } from "react-native-paper";
 import ThemeModeContext from "../store/context/ThemeModeContext";
 import { getHeaderTitle } from "@react-navigation/elements";
+import * as WebBrowser from "expo-web-browser";
 
 export default function Header({ navigation, route, options, back }: any) {
   const theme = useTheme();
@@ -37,33 +38,23 @@ export default function Header({ navigation, route, options, back }: any) {
         <Menu
           visible={menuVisible}
           onDismiss={closeMenu}
-          anchor={
-            <Appbar.Action
-              icon="dots-vertical"
-              onPress={openMenu}
-            />
-          }
+          anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}
+          anchorPosition="bottom"
+          mode="elevated"
         >
           <Menu.Item
-            leadingIcon={"pencil"}
+            leadingIcon={"web"}
             onPress={() => {
-              console.log("Option 1 was pressed");
+              WebBrowser.openBrowserAsync("https://www.5minbowl.com");
             }}
-            title="Option 1"
-          />
-          <Menu.Item
-            leadingIcon={"delete"}
-            onPress={() => {
-              console.log("Option 2 was pressed");
-            }}
-            title="Option 2"
+            title="5분 덮밥 Website"
           />
           <Menu.Item
             leadingIcon={"check"}
             onPress={() => {
-              console.log("Option 3 was pressed");
+              console.log("Option 2 was pressed");
             }}
-            title="Option 3"
+            title="TBD"
             disabled
           />
         </Menu>

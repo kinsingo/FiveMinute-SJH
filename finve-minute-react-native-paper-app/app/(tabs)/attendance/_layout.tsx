@@ -1,9 +1,18 @@
 import { Stack, useRouter } from "expo-router";
-import React, { useState } from "react";
+import React, { useState, useContext} from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
+import { AuthContext } from "@/store/context/AuthContext";
+import LoginRequired from "@/components/LoginRequired";
 
 export default function Layout() {
+  const auth = useContext(AuthContext);
+  const router = useRouter();
+
+  if (!auth.isLogin) {
+     return <LoginRequired router={router} title="근태 관리" />;
+  }
+
   return (
     <>
       <SegmentedNavigation />
@@ -13,10 +22,7 @@ export default function Layout() {
         }}
       >
         <Stack.Screen name="main" options={{ title: "Main Page" }} />
-        <Stack.Screen
-          name="manage"
-          options={{ title: "Attendance Management" }}
-        />
+        <Stack.Screen name="manage" options={{ title: "Attendance Management" }} />
         <Stack.Screen name="recent" options={{ title: "Recent Attendance" }} />
       </Stack>
     </>
@@ -27,7 +33,7 @@ const SegmentedNavigation = () => {
   const router = useRouter(); // Hook for navigation
   const [value, setValue] = useState("main"); // Default to 'index'
 
-  const handleNavigation = (val : string) => {
+  const handleNavigation = (val: string) => {
     setValue(val); // Update the selected value
     if (val === "main") {
       router.push("/(tabs)/attendance/main");
@@ -43,7 +49,7 @@ const SegmentedNavigation = () => {
       <SegmentedButtons
         value={value}
         onValueChange={(val) => {
-            handleNavigation(val);
+          handleNavigation(val);
         }}
         buttons={[
           {
@@ -65,8 +71,8 @@ const SegmentedNavigation = () => {
 };
 
 const styles = StyleSheet.create({
-    container: {
-      marginHorizontal: 30,
-      marginVertical: 10,
-    },
-  });
+  container: {
+    marginHorizontal: 30,
+    marginVertical: 10,
+  },
+});

@@ -3,9 +3,11 @@ import { useFocusEffect } from "expo-router";
 import { Alert } from "react-native";
 import axios from "axios";
 import { Row } from "@/components/inventory/components/TableComponents";
-import { GetCurrentUserEmail } from "@/components/login/auth";
+import { useContext } from "react";
+import { AuthContext } from "@/store/context/AuthContext";
 
 export const useInventoryRecentItems = (apiUrl: string) => {
+  const auth = useContext(AuthContext);
   const [inventoryData, setInventoryData] = useState<Row[]>([]);
   const [loading, setLoading] = useState(true); // ✅ 로딩 상태 추가
   const [currentUserEmail, setCurrentUserEmail] = useState("");
@@ -22,7 +24,7 @@ export const useInventoryRecentItems = (apiUrl: string) => {
         })
       ) ?? [];
       setInventoryData(latestInventoryDataWithKey);
-      const userEmail = (await GetCurrentUserEmail()) as string;
+      const userEmail = await auth.getCurrentUserEmail() as string;
       setCurrentUserEmail(userEmail);
     } catch (error) {
       Alert.alert("Database 접근 오류:" + error);

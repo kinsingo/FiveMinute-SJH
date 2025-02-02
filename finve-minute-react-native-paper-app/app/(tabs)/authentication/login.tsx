@@ -1,8 +1,8 @@
-import { useState, useCallback } from "react";
+import { useState, useCallback, useContext } from "react";
 import ExternalLink from "@/components/ExternalLink";
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
-import { IsLogin, SignIn, Logout } from "@/components/login/auth";
+import { AuthContext } from "@/store/context/AuthContext";
 import React from "react";
 import { useFocusEffect } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native-paper";
@@ -12,9 +12,8 @@ export default function SignInScreen() {
   const [email, setEmail] = useState({ value: "", IsValid: true });
   const [password, setPassword] = useState({ value: "", IsValid: true });
   const [loading, setLoading] = useState(false);
-  const [isLogin, setIsLogin] = useState(false);
-  const [isLoginCheckProgress, setIsLoginCheckProgress] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const auth = useContext(AuthContext);
   
   const [actionMessage, setActionMessage] = useState({
     success: true,
@@ -22,53 +21,23 @@ export default function SignInScreen() {
     subMessage: "",
   });
 
-  useFocusEffect(
-    useCallback(() => {
-      const checkLogin = async () => {
-        setIsLoginCheckProgress(true);
-        const isLogin = await IsLogin();
-        setIsLogin(isLogin.success);
-        if (isLogin.success) {
-          setActionMessage({
-            success: true,
-            message: "로그인 성공",
-            subMessage: isLogin.message,
-          });
-        } else {
-          setActionMessage({
-            success: false,
-            message: "로그인이 필요합니다",
-            subMessage: isLogin.message,
-          });
-        }
-        setIsLoginCheckProgress(false);
-      };
-      checkLogin();
-    }, [])
-  );
-
-  if(isLoginCheckProgress)
-    return <ActivityIndicator style={{ flex: 1 }} size="large" animating={true} />
-
  
-
-
-
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev); // true <-> false 토글
   };
 
   const handleSignIn = async () => {
-    if (isLogin) {
+
+    // 로그인 상태에서 로그아웃
+    if (auth.isLogin) {
       setLoading(true);
-      const response = await Logout();
-      if (response) {
+      const success = await auth.logout();
+      if (success) {
         setActionMessage({
           success: true,
           message: "로그아웃 성공",
           subMessage: "",
         });
-        setIsLogin(false);
       } else {
         setActionMessage({
           success: false,
@@ -80,7 +49,7 @@ export default function SignInScreen() {
       return;
     }
 
-    // TODO: Replace with your sign-in logic
+    // 이메일은 빈 값이 아니어야 함
     if (!email.value) {
       setEmail((prev) => ({ ...prev, isValid: false }));
       setActionMessage({
@@ -88,12 +57,12 @@ export default function SignInScreen() {
         message: "로그인 실패",
         subMessage: "이메일을 입력해주세요.",
       });
-      setIsLogin(false);
       return;
     } else {
       setEmail((prev) => ({ ...prev, isValid: true }));
     }
 
+    // 비밀번호는 빈 값이 아니어야 함
     if (!password.value) {
       setPassword((prev) => ({ ...prev, isValid: false }));
       setActionMessage({
@@ -101,7 +70,6 @@ export default function SignInScreen() {
         message: "로그인 실패",
         subMessage: "비밀번호를 입력해주세요.",
       });
-      setIsLogin(false);
       return;
     } else {
       setPassword((prev) => ({ ...prev, isValid: true }));
@@ -109,7 +77,7 @@ export default function SignInScreen() {
 
     setLoading(true);
     try {
-      const data = await SignIn({
+      const data = await auth.login({
         email: email.value,
         password: password.value,
       });
@@ -117,16 +85,14 @@ export default function SignInScreen() {
         setActionMessage({
           success: true,
           message: "로그인 성공",
-          subMessage: `환영합니다, ${data.user.email}!`,
+          subMessage: `환영합니다, ${auth.user?.email}!`,
         });
-        setIsLogin(true);
       } else {
         setActionMessage({
           success: false,
           message: "로그인 실패",
           subMessage: data.message,
         });
-        setIsLogin(false);
       }
     } catch (error: any) {
       setActionMessage({
@@ -136,7 +102,6 @@ export default function SignInScreen() {
           error.response?.data?.message ||
           "서버와 통신 중 오류가 발생했습니다.",
       });
-      setIsLogin(false);
     }
     setLoading(false);
   };
@@ -181,7 +146,7 @@ export default function SignInScreen() {
           </View>
 
           <View style={styles.form}>
-            {!isLogin && (
+            {!auth.isLogin && (
               <>
                 <TextInput
                   label="Email"
@@ -238,13 +203,13 @@ export default function SignInScreen() {
               disabled={loading}
             >
               <Text variant="bodyLarge" style={{ fontWeight: "bold" }}>
-                {isLogin && "로그아웃"}
-                {!isLogin && "로그인"}
+                {auth.isLogin && "로그아웃"}
+                {!auth.isLogin && "로그인"}
               </Text>
             </Button>
           </View>
 
-          {!isLogin && (
+          {!auth.isLogin && (
             <View style={styles.footer}>
               <Text variant="bodyMedium">
                 계정이 없으신가요?{" "}
