@@ -1,4 +1,4 @@
-import ListOfAttendance, {Attendance} from "../../../components/attendance/listOfAttendance"
+import ListOfAttendance, {Attendance} from "../../components/attendance/listOfAttendance"
 
 const DummyAttendanceList: Attendance[] = [
     {

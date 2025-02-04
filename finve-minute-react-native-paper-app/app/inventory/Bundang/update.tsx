@@ -4,7 +4,7 @@ export default function UpdatePage() {
   return (
     <UpdateFinalModule
       inventoryURL="https://www.5minbowl.com/api/inventory/Bundang"
-      redirectPathAfterSuccessfulUpdate="/(tabs)/inventory/Bundang/status"
+      redirectPathAfterSuccessfulUpdate="/inventory/Bundang/status"
     />
   );
 }

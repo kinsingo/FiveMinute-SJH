@@ -4,7 +4,7 @@ export default function UpdatePage() {
   return (
     <UpdateFinalModule
       inventoryURL="https://www.5minbowl.com/api/inventory/Gangnam"
-      redirectPathAfterSuccessfulUpdate="/(tabs)/inventory/Gangnam/status"
+      redirectPathAfterSuccessfulUpdate="/inventory/Gangnam/status"
     />
   );
 }

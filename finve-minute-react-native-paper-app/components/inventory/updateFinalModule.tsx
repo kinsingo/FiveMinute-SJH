@@ -1,8 +1,6 @@
-import UpdateModule, {
-  DocumentProp,
-} from "@/components/inventory/components/update/updateModule";
+import UpdateModule, { DocumentProp } from "@/components/inventory/components/update/updateModule";
 import { useInventoryRecentItems } from "@/hooks/useInventoryRecentItems";
-import { ActivityIndicator } from "react-native-paper";
+import MyActivityIndicator from "@/components/MyActivityIndicator";
 import React from "react";
 import { Href } from "expo-router";
 
@@ -16,9 +14,7 @@ export default function UpdateFinalModule({
   const { inventoryData, currentUserEmail, loading, reload } =
     useInventoryRecentItems(inventoryURL);
   if (loading) {
-    return (
-      <ActivityIndicator style={{ flex: 1 }} size="large" animating={true} />
-    );
+    return <MyActivityIndicator />;
   }
 
   const document: DocumentProp = {

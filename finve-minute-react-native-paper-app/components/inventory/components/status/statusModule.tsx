@@ -53,6 +53,8 @@ const StatusModule = ({
       setError(null);
   }
 
+  const IsValidUser = documents.itemsMap[table].email === documents.currentUserEmail;
+
   return (
     <>
       <View style={{ flex: 1, padding: 10 }}>
@@ -62,7 +64,8 @@ const StatusModule = ({
           {"\n"}
           {documents.itemsMap[table].email || ""} 님에 의해서 업데이트됨
         </Text>
-        <StatusDeleteButton
+
+        {IsValidUser && (<StatusDeleteButton
           documentEmail={documents.itemsMap[table].email}
           currentUserEmail={documents.currentUserEmail}
           fetchDeleteDataPath={documents.fetchDeleteDataPath}
@@ -70,7 +73,8 @@ const StatusModule = ({
           onDeleteSuccess={onDeleteSuccess}
           error={error}
           setError={setError}
-        />
+        />)}
+        
         <CategorySelector
           isThemeDark={isThemeDark}
           selectedCategory={selectedCategory}

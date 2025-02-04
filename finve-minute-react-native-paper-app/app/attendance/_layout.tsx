@@ -36,11 +36,11 @@ const SegmentedNavigation = () => {
   const handleNavigation = (val: string) => {
     setValue(val); // Update the selected value
     if (val === "main") {
-      router.push("/(tabs)/attendance/main");
+      router.push("/attendance/main");
     } else if (val === "manage") {
-      router.push("/(tabs)/attendance/manage");
+      router.push("/attendance/manage");
     } else if (val === "recent") {
-      router.push("/(tabs)/attendance/recent");
+      router.push("/attendance/recent");
     }
   };
 

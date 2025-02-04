@@ -5,6 +5,7 @@ import axios from "axios";
 import ButtonGroup from "./components/buttonGroup";
 import EditableTable from "./components/editableTable";
 import { Row } from "../TableComponents";
+import { getTimeStamp } from "@/util/time-manager";
 
 export interface DocumentProp {
   inventoryData: Row[];
@@ -36,16 +37,6 @@ export default function UpdateModule({
   };
 
   async function uploadData() {
-    const timestamp = new Intl.DateTimeFormat("ko-KR", {
-      year: "numeric",
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-      second: "2-digit",
-      hour12: true,
-      timeZone: "Asia/Seoul",
-    }).format(new Date());
     if (!localData || localData.length === 0) {
       Alert.alert("업로드 실패", "업로드할 데이터가 없습니다.");
       return;
@@ -54,7 +45,7 @@ export default function UpdateModule({
       setIsAsyncUploading(true);
       const response = await axios.post(document.uploadURL, {
         email: document.currentUserEmail,
-        timestamp: timestamp,
+        timestamp: getTimeStamp(),
         inventoryData: localData,
       });
       if (response.data.success) {

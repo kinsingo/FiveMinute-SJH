@@ -1,11 +1,9 @@
-import { useState, useCallback, useContext } from "react";
+import { useState, useContext } from "react";
 import ExternalLink from "@/components/ExternalLink";
 import { View, StyleSheet, ImageBackground } from "react-native";
 import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
 import { AuthContext } from "@/store/context/AuthContext";
 import React from "react";
-import { useFocusEffect } from "@react-navigation/native";
-import { ActivityIndicator } from "react-native-paper";
 
 export default function SignInScreen() {
   const theme = useTheme();

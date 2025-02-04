@@ -1,9 +1,7 @@
 import React from "react";
-import StatusModule, {
-  DocumentProps,
-} from "@/components/inventory/components/status/statusModule";
+import StatusModule, { DocumentProps } from "@/components/inventory/components/status/statusModule";
 import { useInventoryItemsMap } from "@/hooks/useInventoryItemsMap";
-import { ActivityIndicator } from "react-native-paper";
+import MyActivityIndicator from "@/components/MyActivityIndicator";
 
 export default function StatusFinalModule({
   statusFetchUrl,
@@ -12,13 +10,10 @@ export default function StatusFinalModule({
   statusFetchUrl: string;
   deleteURL: string;
 }) {
-  const { itemsMap, currentUserEmail, loading, reload } =
-    useInventoryItemsMap(statusFetchUrl);
+  const { itemsMap, currentUserEmail, loading, reload } = useInventoryItemsMap(statusFetchUrl);
 
   if (loading) {
-    return (
-      <ActivityIndicator style={{ flex: 1 }} size="large" animating={true} />
-    );
+    return <MyActivityIndicator />;
   }
 
   const documents: DocumentProps = {

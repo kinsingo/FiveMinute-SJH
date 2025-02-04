@@ -23,8 +23,14 @@ export default function Header({ navigation, route, options, back }: any) {
         },
       }}
     >
-      {/* 뒤로 가기 버튼 */}
-      {back ? <Appbar.BackAction onPress={navigation.goBack} /> : null}
+
+      {back ? (
+           /* 뒤로 가기 버튼 */
+        <Appbar.BackAction onPress={navigation.goBack} />
+      ) : (
+        /* 햄버거 버튼 (Drawer 열기) */
+        <Appbar.Action icon="menu" onPress={navigation.openDrawer} />
+      )}
 
       {/* 헤더 타이틀 */}
       <Appbar.Content title={title} />
