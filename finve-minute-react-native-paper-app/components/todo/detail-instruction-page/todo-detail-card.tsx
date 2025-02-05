@@ -16,7 +16,7 @@ interface InstructionDetailScreenProps {
 
 export default function TodoDetailCard({isEditing, details, setDetails, title, author, timestamp, imageUrl}: InstructionDetailScreenProps) {
   return (
-    <Card>
+    <Card mode="contained">
       <Card.Content>
         <MainText
           title={title as string}

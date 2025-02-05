@@ -51,14 +51,7 @@ export const uploadImageToFirebase = async (uri: string): Promise<string | null>
  * @param filename 삭제할 파일 경로 (예: "instructions/12345.jpg")
  * @returns 성공 여부
  */
-export const deleteImageFromFirebase = async (filename: string): Promise<boolean> => {
-  try {
-    const storageRef = ref(storage, filename);
-    await deleteObject(storageRef);
-    console.log("✅ Firebase Storage 삭제 성공:", filename);
-    return true;
-  } catch (error) {
-    console.error("🔥 Firebase Storage 삭제 실패:", error);
-    return false;
-  }
+export const deleteImageFromFirebase = async (filename: string): Promise<void> => {
+  const storageRef = ref(storage, filename);
+  await deleteObject(storageRef);
 };

@@ -2,7 +2,7 @@ import React, { useState, useContext } from "react";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
 import { Button } from "react-native-paper";
-import { addInstruction, Instruction } from "@/components/todo/instruction-db-manager";
+import { addInstruction, Instruction,LocationProp } from "@/components/todo/instruction-db-manager";
 import { AuthContext } from "@/store/context/AuthContext";
 import { getTimeStamp } from "@/util/time-manager";
 import { uploadImageToFirebase } from "@/components/todo/instruction-storage-mananger";
@@ -13,12 +13,14 @@ export default function SaveButton({
   imageUrl,
   IsSaving,
   setIsSaving,
+  Location,
 }: {
   title: string;
   details: string;
   imageUrl: string | null;
   IsSaving: boolean;
   setIsSaving: (value: boolean) => void;
+  Location: LocationProp;
 }) {
   const router = useRouter();
   const auth = useContext(AuthContext);
@@ -47,7 +49,7 @@ export default function SaveButton({
         details,
         imageUrl: firebaseImageUrl || "",
       };
-      await addInstruction(newInstruction as Instruction);
+      await addInstruction({ Location, instruction: newInstruction as Instruction });
       router.back(); // 저장 후 목록 화면으로 이동
     } catch (error) {
       Alert.alert("저장 실패", "지시사항 저장 중 오류가 발생했습니다.");

@@ -2,7 +2,9 @@ import React, { useState } from "react";
 import { View, Keyboard, TouchableWithoutFeedback } from "react-native";
 import SaveButton from "@/components/todo/new-instruction-page/save-button";
 import EditableCard from "@/components/todo/new-instruction-page/editable-card";
-export default function NewInstructionScreen() {
+import { LocationProp } from "@/components/todo/instruction-db-manager";
+
+export default function NewInstructionModule({ Location }: { Location: LocationProp }) {
   const [title, setTitle] = useState("");
   const [details, setDetails] = useState("");
   const [imageUrl, setImageUrl] = useState<string | null>(null);
@@ -26,6 +28,7 @@ export default function NewInstructionScreen() {
           imageUrl={imageUrl}
           IsSaving={IsSaving}
           setIsSaving={setIsSaving}
+          Location={Location}
         />
       </View>
     </TouchableWithoutFeedback>
