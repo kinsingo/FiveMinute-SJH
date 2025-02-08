@@ -1,10 +1,10 @@
 {
   "expo": {
-    "name": "finve-minute-react-native-paper-app",
+    "name": "5분 덮밥",
     "slug": "finve-minute-react-native-paper-app",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/android-chrome-512x512.png",
+    "icon": "./assets/images/icon_1024x1024.png",
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -16,10 +16,6 @@
       }
     },
     "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/android-chrome-512x512.png",
-        "backgroundColor": "#ffffff"
-      },
       "permissions": [
         "android.permission.RECORD_AUDIO",
         "android.permission.BLUETOOTH",
@@ -39,7 +35,7 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/android-chrome-512x512.png",
+          "image": "./assets/images/splash_2048x2048.png",
           "imageWidth": 200,
           "resizeMode": "contain",
           "backgroundColor": "#ffffff"
