@@ -1,10 +1,10 @@
 import GETModule from "../components/get";
 import DeleteModule from "../components/delete";
-import { NextRequest } from "next/server";
 import POSTModule from "../components/post";
+import { NextRequest } from "next/server";
 import {InventoryCollectionName} from "@/MongoDB/db-manager";
 
-const collectionName = InventoryCollectionName.bundang;
+const collectionName = InventoryCollectionName.sinlim;
 
 export async function GET() {
   return await GETModule(collectionName);

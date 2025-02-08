@@ -44,4 +44,10 @@ async function getPublicCollection(collectionName: string) {
   return _publicDB.collection(collectionName);
 }
 
-export { getPublicCollection };
+enum InventoryCollectionName {
+  bundang = "inventory-status-bundang",
+  gangnam = "inventory-status-gangnam",
+  sinlim = "inventory-status-sinlim",
+}
+
+export { getPublicCollection, InventoryCollectionName };

@@ -8,6 +8,7 @@ export default function Todo() {
     <List.Section>
       <List.Item title="강남점" onPress={() => router.push("/todo/Gangnam/instruction-list")} />
       <List.Item title="수내점" onPress={() => router.push("/todo/Bundang/instruction-list")} />
+      <List.Item title="관악점" onPress={() => router.push("/todo/Sinlim/instruction-list")} />
     </List.Section>
   );
 }

@@ -62,6 +62,19 @@ const routes : RouteItem[] = [
           },
         ],
       },
+      {
+        name: "관악점",
+        collapse: [
+          {
+            name: "재고 업데이트",
+            route: "/inventory/Sinlim/update",
+          },
+          {
+            name: "재고 상태",
+            route: "/inventory/Sinlim/status",
+          },
+        ],
+      },
     ],
   },
 ];

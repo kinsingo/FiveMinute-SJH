@@ -29,7 +29,8 @@ export interface CommentProps {
   commentImageUrl: string;
 }
 
-export type LocationProp = "Bundang" | "Gangnam";
+export type LocationProp = "Bundang" | "Gangnam" | "Sinlim";
+export type koreanPlaceName = "강남점" | "수내점" | "관악점";
 
 const getTopLevelCollectionName = (Location: LocationProp) => {
   return "instructions-" + Location;

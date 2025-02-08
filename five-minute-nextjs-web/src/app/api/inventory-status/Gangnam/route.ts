@@ -1,6 +1,6 @@
 import GETModule from "../components/get";
-const collectionName = "inventory-status-gangnam";
+import {InventoryCollectionName} from "@/MongoDB/db-manager";
 
 export async function GET() {
-  return await GETModule(collectionName);
+  return await GETModule(InventoryCollectionName.gangnam);
 }
