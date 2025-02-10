@@ -51,7 +51,7 @@ export async function POST(req: Request) {
     return NextResponse.json({
       success: true,
       message: `로그인에 성공했습니다.`,
-      token, // 🔹 App에서 이 토큰을 저장해야 함
+      token, // 🔹 App에서 이 토큰을 저장해야 함 (DB가 아닌 App에 Local Storage에 저장되는 부분)
       user: {
       id: user._id,
       email: user.email,
