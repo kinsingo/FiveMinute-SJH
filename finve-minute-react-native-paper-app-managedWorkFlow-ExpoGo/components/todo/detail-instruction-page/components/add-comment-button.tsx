@@ -1,5 +1,5 @@
-import React, { useState, useEffect, useContext } from "react";
-import { View, ScrollView, StyleSheet, Keyboard, Alert, Image } from "react-native";
+import React, { useContext } from "react";
+import {  Keyboard, Alert } from "react-native";
 
 import { Avatar, Button } from "react-native-paper";
 import { getTimeStamp } from "@/util/time-manager";
@@ -51,7 +51,8 @@ export default function AddCommentButton({
 
       const newComment = {
         content: content,
-        author: auth.user?.email as string,
+        author: auth.userInfo?.nickname || auth.userInfo?.realname || auth.user?.email as string,
+        email: auth.user?.email as string,
         timestamp: getTimeStamp(),
         commentImageUrl: firebaseImageUrl || "",
       } as CommentProps;

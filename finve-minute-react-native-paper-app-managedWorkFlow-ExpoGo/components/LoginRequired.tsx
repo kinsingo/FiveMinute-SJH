@@ -12,7 +12,7 @@ export default function LoginRequired({ title , router }:  { title:string, route
         />
         <View style={{ justifyContent: "center", alignItems: "center", padding: 0 }}>
           <Card.Actions>
-            <Button mode="contained" onPress={() => router.push("/(tabs)/authentication/login")}>
+            <Button onPress={() => router.push("/(tabs)/authentication/login")}>
               로그인하러 가기
             </Button>
           </Card.Actions>

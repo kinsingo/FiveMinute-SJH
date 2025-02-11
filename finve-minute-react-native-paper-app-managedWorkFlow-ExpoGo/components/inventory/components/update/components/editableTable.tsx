@@ -1,43 +1,26 @@
 import React from "react";
-import { ScrollView } from "react-native";
+import { MyVerticalScrollView } from "@/components/MyScrollView";
 import { DataTable } from "react-native-paper";
-import {
-  TableHeader,
-  RenderedRowEditableItem,
-  Row,
-} from "../../TableComponents";
-import ThemeModeContext from "@/store/context/ThemeModeContext";
+import { TableHeader, RenderedRowEditableItem, Row } from "../../TableComponents";
 
 interface EditableTableProps {
   localData: Row[];
   handleRowUpdate: (updatedRow: Row) => void;
 }
 
-export default function EditableTable({
-  localData,
-  handleRowUpdate,
-}: EditableTableProps) {
-  const { isThemeDark } = React.useContext(ThemeModeContext);
-
+export default function EditableTable({ localData, handleRowUpdate }: EditableTableProps) {
   return (
     <>
       <DataTable>
         <TableHeader />
       </DataTable>
-      <ScrollView
-        showsVerticalScrollIndicator={true}
-        indicatorStyle={isThemeDark ? "white" : "black"}
-      >
+      <MyVerticalScrollView>
         <DataTable>
           {localData.map((item) => (
-            <RenderedRowEditableItem
-              key={item.key}
-              item={item}
-              onUpdate={handleRowUpdate}
-            />
+            <RenderedRowEditableItem key={item.key} item={item} onUpdate={handleRowUpdate} />
           ))}
         </DataTable>
-      </ScrollView>
+      </MyVerticalScrollView>
     </>
   );
 }

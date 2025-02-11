@@ -1,7 +1,7 @@
 import React from "react";
-import { ScrollView } from "react-native";
+
 import { Text, TextInput } from "react-native-paper";
-import ThemeModeContext from "@/store/context/ThemeModeContext";
+import { MyVerticalScrollView } from "@/components/MyScrollView";
 interface InstructionDetailScreenProps {
   isEditing: boolean;
   details: string;
@@ -13,15 +13,9 @@ export default function DetailTextInput({
   details,
   setDetails,
 }: InstructionDetailScreenProps) {
-  const { isThemeDark } = React.useContext(ThemeModeContext);
 
   return (
-    <ScrollView
-      style={{ maxHeight: 150 }}
-      keyboardShouldPersistTaps="handled"
-      showsVerticalScrollIndicator={true}
-      indicatorStyle={isThemeDark ? "white" : "black"}
-    >
+    <MyVerticalScrollView style={{ maxHeight: 150 }} keyboardShouldPersistTaps="handled">
       {isEditing ? (
         <TextInput
           label="세부사항"
@@ -38,6 +32,6 @@ export default function DetailTextInput({
       ) : (
         <Text variant="bodyMedium">{details}</Text>
       )}
-    </ScrollView>
+    </MyVerticalScrollView>
   );
 }

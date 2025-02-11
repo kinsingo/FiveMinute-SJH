@@ -1,5 +1,6 @@
-import { Image, View, ScrollView } from "react-native";
+import { Image, View } from "react-native";
 import { Text, Divider, Icon } from "react-native-paper";
+import { MyVerticalScrollView } from "@/components/MyScrollView";
 
 const donburiItems = [
   "[모두의 제육] 직화제육덮밥 도시락",
@@ -74,7 +75,7 @@ const menuCategories = [
 
 export default function HomeScreen() {
   return (
-    <ScrollView>
+    <MyVerticalScrollView>
       {/* 메인 이미지 */}
       <View style={{ height: 250 }}>
         <Image
@@ -100,7 +101,7 @@ export default function HomeScreen() {
       {menuCategories.map((category, index) => (
         <Menus key={index} title={category.title} items={category.items} icon={category.icon} />
       ))}
-    </ScrollView>
+    </MyVerticalScrollView>
   );
 }
 
@@ -114,11 +115,6 @@ function Menus({ icon, title, items }: {icon: string, title: string; items: stri
         <Icon source={icon} size={24} />
         <Text variant="headlineSmall">{title}</Text>
       </View>
-
-        {/* <Icon source={icon} size={24} />
-        <Text variant="headlineSmall" style={{ marginBottom: 10 }}>
-          {title}
-        </Text> */}
         {items.map((item, index) => (
           <Text key={index} variant="bodyLarge" style={{ marginBottom: 5 }}>
             • {item}

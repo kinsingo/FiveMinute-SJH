@@ -11,7 +11,6 @@ export function getTimeStamp() {
   }).format(new Date());
 }
 
-
 export function get24hTime() {
   return new Intl.DateTimeFormat("ko-KR", {
     timeZone: "Asia/Seoul",

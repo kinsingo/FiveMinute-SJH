@@ -4,9 +4,11 @@ import { getPublicCollection } from "@/MongoDB/db-manager";
 export default async function POSTModule(collectionName: string, req: NextRequest) {
   try {
     const collection = await getPublicCollection(collectionName);
-    const { email, timestamp, inventoryData } = await req.json();
+    const { email,nickname,realname, timestamp, inventoryData } = await req.json();
     await collection.insertOne({
       email,
+      nickname,
+      realname,
       timestamp,
       inventoryData, 
     });

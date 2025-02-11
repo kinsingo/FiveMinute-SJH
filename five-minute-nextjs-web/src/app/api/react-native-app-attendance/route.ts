@@ -9,7 +9,8 @@ export async function POST(req: Request) {
     //attendanceIndex : 1 -> 두번째 출/퇴근
     //attendanceIndex : 2 -> 세번째 출/퇴근
     const date = getTodayDate();
-    const { email, timestamp, attendanceIndex, isCheckIn } = await req.json();
+    const { email, timestamp, location, attendanceIndex, isCheckIn } =
+      await req.json();
     const collection = await getPublicCollection(email + "_attendance");
     let attendance = await collection.findOne({ email, date });
     if (!attendance) {
@@ -17,9 +18,16 @@ export async function POST(req: Request) {
       await collection.insertOne(attendance);
     }
 
-    // ✅ 출근 / 퇴근 필드 업데이트
-    const field = isCheckIn ? `checkIn.${attendanceIndex}` : `checkOut.${attendanceIndex}`;
-    await collection.updateOne({ email, date }, { $set: { [field]: timestamp } });
+    // ✅ 출근 / 퇴근 필드 및 위치 업데이트
+    const updateFields = {
+      [isCheckIn
+        ? `checkIn.${attendanceIndex}`
+        : `checkOut.${attendanceIndex}`]: timestamp,
+      [isCheckIn
+        ? `checkInLocation.${attendanceIndex}`
+        : `checkOutLocation.${attendanceIndex}`]: location,
+    };
+    await collection.updateOne({ email, date }, { $set: updateFields });
 
     // ✅ 최신 데이터 직접 Read 해서 가져오기
     const updatedAttendance = await collection.findOne({ email, date });
@@ -34,7 +42,7 @@ export async function POST(req: Request) {
     // ✅ 총 근무 시간 자동 계산 (모든 출근/퇴근 시간이 입력된 경우)
     const { checkIn, checkOut } = updatedAttendance;
     const workHours = calculateWorkHours(checkIn, checkOut);
-    if(workHours > 0)
+    if (workHours > 0)
       await collection.updateOne({ email, date }, { $set: { workHours } });
 
     return NextResponse.json({
@@ -70,8 +78,14 @@ export async function GET(req: Request) {
       attendance = getInitialData({ email, date });
       await collection.insertOne(attendance);
     }
+
     return NextResponse.json(
-      { checkIn: attendance.checkIn, checkOut: attendance.checkOut },
+      {
+        checkIn: attendance.checkIn,
+        checkOut: attendance.checkOut,
+        checkInLocation: attendance.checkInLocation,
+        checkOutLocation: attendance.checkOutLocation,
+      },
       { status: 200 }
     );
   } catch (error) {
@@ -104,6 +118,8 @@ function getInitialData({ email, date }: { email: string; date: string }) {
     date,
     checkIn: ["", "", ""],
     checkOut: ["", "", ""],
+    checkInLocation: ["", "", ""],
+    checkOutLocation: ["", "", ""],
     status: "", // 기본값
     workHours: 0, // 기본값
   };
@@ -116,7 +132,9 @@ function calculateWorkHours(checkIn: string[], checkOut: string[]): number {
     if (!checkIn[i] || !checkOut[i]) continue; // 빈 값이면 건너뜀
 
     const checkInParts = checkIn[i].split(":").map((num) => parseInt(num, 10));
-    const checkOutParts = checkOut[i].split(":").map((num) => parseInt(num, 10));
+    const checkOutParts = checkOut[i]
+      .split(":")
+      .map((num) => parseInt(num, 10));
 
     if (checkInParts.length !== 3 || checkOutParts.length !== 3) continue; // 형식이 맞지 않으면 무시
 

@@ -16,6 +16,7 @@ export interface Instruction {
   id: string;
   title: string;
   author: string;
+  email: string;
   timestamp: string;
   details: string;
   imageUrl: string;
@@ -25,6 +26,7 @@ export interface CommentProps {
   id: string;
   content: string;
   author: string;
+  email: string;
   timestamp: string;
   commentImageUrl: string;
 }
@@ -109,6 +111,7 @@ export const getInstructions = async ({ Location }: { Location: LocationProp }) 
         id: doc.id,
         title: data.title,
         author: data.author,
+        email: data.email,
         timestamp: data.timestamp,
         details: data.details,
         imageUrl: data.imageUrl,

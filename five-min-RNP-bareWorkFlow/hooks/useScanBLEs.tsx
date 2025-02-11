@@ -25,7 +25,7 @@ export type validIbeaconE7Name = "5minGN" | "5minSN" | "5minSL";
 function IsVlaidIDType(id: string) {
   if (id === "C3:00:00:3F:38:DD") return true; //5minGN
   if (id === "C3:00:00:3F:38:D2") return true; //5minSN
-  if (id === "5minSL TBD") return true; //5minSL
+  if (id === "C3:00:00:3F:37:4B") return true; //5minSL
   return false;
 }
 
@@ -152,5 +152,5 @@ export function useScanBLEs() {
     validBeaconNameRef.current = name;
   };
 
-  return { IsVaidArea, setValidBeaconName, isScanning };
+  return { IsVaidArea, setValidBeaconName };
 }

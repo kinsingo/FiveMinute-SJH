@@ -11,9 +11,30 @@ import { AuthContext } from "@/store/context/AuthContext";
 export const useInventoryItemsMap = (apiUrl: string) => {
   const auth = useContext(AuthContext);
   const [itemsMap, setItemsMap] = useState<Record<TableType, Item>>({
-    [TableType.Latest]: { email: "", timestamp: "", inventoryData: [],id:"" },
-    [TableType.Previous1]: { email: "", timestamp: "", inventoryData: [],id:""},
-    [TableType.Previous2]: { email: "", timestamp: "", inventoryData: [],id:""},
+    [TableType.Latest]: {
+      email: "",
+      nickname: "",
+      realname: "",
+      timestamp: "",
+      inventoryData: [],
+      id: "",
+    },
+    [TableType.Previous1]: {
+      email: "",
+      nickname: "",
+      realname: "",
+      timestamp: "",
+      inventoryData: [],
+      id: "",
+    },
+    [TableType.Previous2]: {
+      email: "",
+      nickname: "",
+      realname: "",
+      timestamp: "",
+      inventoryData: [],
+      id: "",
+    },
   });
   const [loading, setLoading] = useState(true); // ✅ 로딩 상태 추가
   const [currentUserEmail, setCurrentUserEmail] = useState("");
@@ -27,19 +48,20 @@ export const useInventoryItemsMap = (apiUrl: string) => {
       const newItemsMap: Record<TableType, Item> = tableTypes.reduce((acc, type, index) => {
         acc[type] = {
           email: latestDocument[index]?.email || "",
+          nickname: latestDocument[index]?.nickname,
+          realname: latestDocument[index]?.realname,
           timestamp: latestDocument[index]?.timestamp || "",
-          inventoryData: latestDocument[index]?.inventoryData?.map(
-            (item: Row, itemIndex: number) => ({
+          inventoryData:
+            latestDocument[index]?.inventoryData?.map((item: Row, itemIndex: number) => ({
               ...item,
               key: `${itemIndex}`,
-            })
-          ) ?? [],
+            })) ?? [],
           id: latestDocument[index]?._id || "",
         };
         return acc;
       }, {} as Record<TableType, Item>);
       setItemsMap(newItemsMap);
-      const userEmail = await auth.getCurrentUserEmail() as string;
+      const userEmail = (await auth.getCurrentUserEmail()) as string;
       setCurrentUserEmail(userEmail);
     } catch (error) {
       Alert.alert("Database 접근 오류:" + error);
@@ -54,5 +76,5 @@ export const useInventoryItemsMap = (apiUrl: string) => {
     }, [apiUrl])
   );
 
-  return { itemsMap, currentUserEmail, loading, reload:fetchStatus }; // ✅ loading 상태 함께 반환
+  return { itemsMap, currentUserEmail, loading, reload: fetchStatus }; // ✅ loading 상태 함께 반환
 };

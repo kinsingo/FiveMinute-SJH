@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import EditableButtons from "@/components/todo/detail-instruction-page/editable-buttons";
 import TodoDetailCard from "@/components/todo/detail-instruction-page/todo-detail-card";
@@ -12,12 +12,14 @@ import {
 import ToDoDetailCommentImage from "@/components/todo/detail-instruction-page/components/todo-detail-comment-image";
 import CommentInputModule from "@/components/todo/detail-instruction-page/components/comment-input-module";
 import CommentCard from "@/components/todo/detail-instruction-page/components/comment-card";
+import { MyVerticalScrollView } from "@/components/MyScrollView";
 
 export default function DetailInstructionModule({ Location }: { Location: LocationProp }) {
   const {
     id,
     title,
     author,
+    email,
     timestamp,
     details: initialDetails,
     imageUrl,
@@ -49,12 +51,13 @@ export default function DetailInstructionModule({ Location }: { Location: Locati
 
   return (
     <View style={{ flex: 1, padding: 16, justifyContent: "center", alignContent: "center" }}>
-      <ScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
+      <MyVerticalScrollView contentContainerStyle={{ flexGrow: 1 }} keyboardShouldPersistTaps="handled">
         <EditableButtons
           id={id as string}
           details={details}
           imageUrl={imageUrl as string}
           author={author as string}
+          email={email as string}
           isEditing={isEditing}
           setIsEditing={setIsEditing}
           setDetails={setDetails}
@@ -74,7 +77,7 @@ export default function DetailInstructionModule({ Location }: { Location: Locati
         {comments.map((comment) => (
           <CommentCard key={comment.id} comment={comment} />
         ))}
-      </ScrollView>
+      </MyVerticalScrollView>
 
       {commentImageUrl && <ToDoDetailCommentImage commentImageUrl={commentImageUrl} />}
       <CommentInputModule

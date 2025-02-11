@@ -46,7 +46,6 @@ export default function Header({ navigation, route, options, back }: any) {
           onDismiss={closeMenu}
           anchor={<Appbar.Action icon="dots-vertical" onPress={openMenu} />}
           anchorPosition="bottom"
-          mode="elevated"
         >
           <Menu.Item
             leadingIcon={"web"}
