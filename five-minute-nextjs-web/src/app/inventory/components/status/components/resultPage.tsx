@@ -1,10 +1,10 @@
 "use client";
-import ResultTable from "./components/resultTable";
+import ResultTable from "../../../../../components/resultTable";
 import Box from "@mui/material/Box";
 import Container from "@mui/material/Container";
 import Stack from "@mui/material/Stack";
 import { motion, AnimatePresence } from "framer-motion";
-import { TableProps } from "./components/resultTable";
+import { TableProps } from "../../../../../components/resultTable";
 import React from "react";
 import Radio from "@mui/material/Radio";
 import RadioGroup from "@mui/material/RadioGroup";

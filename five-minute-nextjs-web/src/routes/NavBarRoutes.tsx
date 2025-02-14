@@ -26,6 +26,7 @@
 //import AssessmentIcon from "@mui/icons-material/Assessment";
 //import DashboardIcon from "@mui/icons-material/Dashboard";
 import KitchenIcon from '@mui/icons-material/Kitchen';
+import AccessTimeIcon  from '@mui/icons-material/AccessTime';
 //import ContactsIcon from "@mui/icons-material/Contacts";
 //import ArticleIcon from "@mui/icons-material/Article";
 
@@ -74,6 +75,16 @@ const routes : RouteItem[] = [
             route: "/inventory/Sinlim/status",
           },
         ],
+      },
+    ],
+  },
+  {
+    name: "근태 관리",
+    icon: <AccessTimeIcon/>,
+    collapse: [
+      {
+        name: "대시보드",
+        route: "/attendance/",
       },
     ],
   },

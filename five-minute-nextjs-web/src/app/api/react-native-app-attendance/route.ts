@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
 import { getPublicCollection } from "@/MongoDB/db-manager";
+import { getKoreaTodayDate } from "@/utils/timeManager";
+
 
 //Sign-In
 export async function POST(req: Request) {
@@ -8,7 +10,7 @@ export async function POST(req: Request) {
     //attendanceIndex : 0 -> 첫번째 출/퇴근
     //attendanceIndex : 1 -> 두번째 출/퇴근
     //attendanceIndex : 2 -> 세번째 출/퇴근
-    const date = getTodayDate();
+    const date = getKoreaTodayDate();
     const { email, timestamp, location, attendanceIndex, isCheckIn } =
       await req.json();
     const collection = await getPublicCollection(email + "_attendance");
@@ -62,7 +64,7 @@ export async function POST(req: Request) {
 // ✅ 로그인 여부 확인 (GET)
 export async function GET(req: Request) {
   try {
-    const date = getTodayDate();
+    const date = getKoreaTodayDate();
     const url = new URL(req.url);
     const email = url.searchParams.get("email") as string; // ✅ GET 요청 시 데이터 추출 방식 변경
     if (!email) {
@@ -97,17 +99,7 @@ export async function GET(req: Request) {
   }
 }
 
-function getTodayDate() {
-  return new Intl.DateTimeFormat("ko-KR", {
-    timeZone: "Asia/Seoul",
-    year: "numeric",
-    month: "2-digit",
-    day: "2-digit",
-  })
-    .format(new Date())
-    .replace(/\. /g, "-")
-    .replace(/\.$/, "");
-}
+
 
 import { ObjectId } from "mongodb";
 

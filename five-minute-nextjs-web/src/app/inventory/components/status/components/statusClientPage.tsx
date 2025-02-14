@@ -3,7 +3,7 @@ import ResultPage from "./resultPage";
 import {
   Column,
   Row,
-} from "@/app/inventory/components/status/components/components/resultTable";
+} from "@/components/resultTable";
 import { Typography } from "@mui/material";
 import Box from "@mui/material/Box";
 import DeleteStatusButton from "./deleteStatusBotton";

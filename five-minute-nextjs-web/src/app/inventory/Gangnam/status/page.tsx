@@ -9,7 +9,6 @@ export default async function Status() {
       mainText="강남역점 재고 상태"
       color="info"
       fetchDeleteDataPath="/api/inventory/Gangnam"
-
     />
   );
 }
