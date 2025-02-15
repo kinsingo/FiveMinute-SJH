@@ -53,16 +53,16 @@ const SegmentedNavigation = () => {
         }}
         buttons={[
           {
-            value: "main",
-            label: "main",
+            value: "manage",
+            label: "출/퇴근",
           },
           {
-            value: "manage",
-            label: "manage",
+            value: "main",
+            label: "자세히",
           },
           {
             value: "recent",
-            label: "recent",
+            label: "요약",
           },
         ]}
       />

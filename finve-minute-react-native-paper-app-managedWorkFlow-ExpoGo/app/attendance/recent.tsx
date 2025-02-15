@@ -1,22 +1,43 @@
+import { useFocusEffect } from "expo-router";
+import React, { useState, useCallback, useContext } from "react";
+import { Alert} from "react-native";
+import { AuthContext } from "@/store/context/AuthContext";
+import axios from "axios";
+import { AttendanceData } from "../../components/attendance/AttendanceTable";
+import MyActivityIndicator from "@/components/MyActivityIndicator";
+import SummaryTable from "../../components/attendance/SummaryTable";
 
-import {Text} from "react-native-paper"
-import {StyleSheet, View} from "react-native"
+const ATTENDANCE_URL = "https://www.5minbowl.com/api/attendance";
 
-export default function Recent() {
-    return (
-        <View style={styles.container}>
-          <Text style={styles.text}>Attendance Recent Page</Text>
-        </View>
-      );
-    }
-    
-    const styles = StyleSheet.create({
-        container: {
-            flex: 1,
-            justifyContent: 'center',
-            alignItems: 'center',
-        },
-        text: {
-            fontSize: 20,
-        },
-    });
+export default function recent() {
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const auth = useContext(AuthContext);
+  const email = auth.user?.email;
+  const [isLoading, setIsLoading] = useState(true);
+
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchAttendanceList() {
+        try {
+          setIsLoading(true);
+          const response = await axios.get(ATTENDANCE_URL, {
+            params: { email },
+          });
+          setAttendanceData(response.data);
+        } catch (error: any) {
+          const errorMessage = error.response?.data?.message || "서버 오류가 발생했습니다.";
+          Alert.alert(`⚠️ ${errorMessage}`);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      fetchAttendanceList();
+    }, [])
+  );
+
+  if(isLoading)
+    return <MyActivityIndicator />;
+
+  return <SummaryTable attendanceData={attendanceData} />;
+  //return <ListOfAttendance attendanceList={DummyAttendanceList} />;
+}

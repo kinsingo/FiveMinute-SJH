@@ -1,97 +1,42 @@
-import ListOfAttendance, { Attendance } from "../../components/attendance/listOfAttendance";
-import React, { useState } from "react";
-import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from "react-native";
-//import DeviceModal from "@/components/todo/DeviceConnectionModal";
-//import useBLE from "@/hooks/useBLE";
+import { useFocusEffect } from "expo-router";
+import React, { useState, useCallback, useContext } from "react";
+import { Alert} from "react-native";
+import { AuthContext } from "@/store/context/AuthContext";
+import axios from "axios";
+import AttendanceTable, { AttendanceData } from "../../components/attendance/AttendanceTable";
+import MyActivityIndicator from "@/components/MyActivityIndicator";
+
+const ATTENDANCE_URL = "https://www.5minbowl.com/api/attendance";
 
 export default function main() {
-  // const { requestPermissions, scanForPeripherals, allDevices } = useBLE();
-  // const [isModalVisible, setIsModalVisible] = useState<boolean>(false);
+  const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);
+  const auth = useContext(AuthContext);
+  const email = auth.user?.email;
+  const [isLoading, setIsLoading] = useState(true);
 
-  // const scanForDevices = async () => {
-  //   const isPermissionsEnabled = await requestPermissions();
-  //   if (isPermissionsEnabled) {
-  //     scanForPeripherals();
-  //   }
-  // };
+  useFocusEffect(
+    useCallback(() => {
+      async function fetchAttendanceList() {
+        try {
+          setIsLoading(true);
+          const response = await axios.get(ATTENDANCE_URL, {
+            params: { email },
+          });
+          setAttendanceData(response.data);
+        } catch (error: any) {
+          const errorMessage = error.response?.data?.message || "서버 오류가 발생했습니다.";
+          Alert.alert(`⚠️ ${errorMessage}`);
+        } finally {
+          setIsLoading(false);
+        }
+      }
+      fetchAttendanceList();
+    }, [])
+  );
 
-  // const hideModal = () => {
-  //   setIsModalVisible(false);
-  // };
+  if(isLoading)
+    return <MyActivityIndicator />;
 
-  // const openModal = async () => {
-  //   scanForDevices();
-  //   setIsModalVisible(true);
-  // };
-
-  return  <ListOfAttendance attendanceList={DummyAttendanceList} />;
-    {/*<SafeAreaView style={styles.container}>
-       <View style={styles.heartRateTitleWrapper}>
-        <Text style={styles.heartRateTitleText}>Please Connect to a Heart Rate Monitor</Text>
-      </View>
-      <TouchableOpacity onPress={openModal} style={styles.ctaButton}>
-        <Text style={styles.ctaButtonText}>{"Connect"}</Text>
-      </TouchableOpacity>
-      <DeviceModal
-        closeModal={hideModal}
-        visible={isModalVisible}
-        connectToPeripheral={() => {}}
-        devices={allDevices}
-      /> 
-    </SafeAreaView>*/}
-  
-};
-
-const DummyAttendanceList: Attendance[] = [
-  {
-    start: new Date("2023-10-01T08:00:00"),
-    end: new Date("2023-10-01T17:00:00"),
-  },
-  {
-    start: new Date("2023-10-02T08:30:00"),
-    end: new Date("2023-10-02T17:30:00"),
-  },
-  {
-    start: new Date("2023-10-03T09:00:00"),
-    end: new Date("2023-10-03T18:00:00"),
-  },
-];
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#f2f2f2",
-  },
-  heartRateTitleWrapper: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  heartRateTitleText: {
-    fontSize: 30,
-    fontWeight: "bold",
-    textAlign: "center",
-    marginHorizontal: 20,
-    color: "black",
-  },
-  heartRateText: {
-    fontSize: 25,
-    marginTop: 15,
-  },
-  ctaButton: {
-    backgroundColor: "#FF6060",
-    justifyContent: "center",
-    alignItems: "center",
-    height: 50,
-    marginHorizontal: 20,
-    marginBottom: 5,
-    borderRadius: 8,
-  },
-  ctaButtonText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    color: "white",
-  },
-});
-
-
+  return <AttendanceTable attendanceData={attendanceData} />;
+  //return <ListOfAttendance attendanceList={DummyAttendanceList} />;
+}
