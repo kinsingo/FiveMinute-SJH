@@ -1,8 +1,9 @@
 import { useState, useContext } from "react";
 import ExternalLink from "@/components/ExternalLink";
-import { View, StyleSheet, ImageBackground } from "react-native";
+import { View, StyleSheet, ImageBackground,Alert } from "react-native";
 import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
 import { AuthContext } from "@/store/context/AuthContext";
+import { useRouter } from "expo-router";
 import React from "react";
 
 export default function SignInScreen() {
@@ -12,7 +13,7 @@ export default function SignInScreen() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const auth = useContext(AuthContext);
-  
+  const router = useRouter();
   const [actionMessage, setActionMessage] = useState({
     success: true,
     message: "",
@@ -25,7 +26,6 @@ export default function SignInScreen() {
   };
 
   const handleSignIn = async () => {
-
     // 로그인 상태에서 로그아웃
     if (auth.isLogin) {
       setLoading(true);
@@ -83,8 +83,24 @@ export default function SignInScreen() {
         setActionMessage({
           success: true,
           message: "로그인 성공",
-          subMessage: `환영합니다, ${auth.user?.email}!`,
+          subMessage: `환영합니다, ${data.user.email}!`,
         });
+        Alert.alert(
+          "로그인 성공",
+          "계정관리 페이지로 이동하시겠습니까?",
+          [
+            {
+              text: "OK",
+              onPress: () => router.push("/account"),
+            },
+            {
+              text: "Cancel",
+              style: "cancel",
+            },
+         
+          ],
+          { cancelable: false }
+        );
       } else {
         setActionMessage({
           success: false,
@@ -192,7 +208,6 @@ export default function SignInScreen() {
             )}
 
             <Button
-              mode="contained"
               onPress={handleSignIn}
               style={[
                 styles.button,

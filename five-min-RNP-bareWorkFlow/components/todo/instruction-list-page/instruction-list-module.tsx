@@ -42,6 +42,7 @@ export default function InstructionListModule({Location}:{Location:LocationProp}
                   id: item.id,
                   title: item.title,
                   author: item.author,
+                  email: item.email,
                   timestamp: item.timestamp,
                   details: item.details,
                   imageUrl: encodeURIComponent(item.imageUrl),

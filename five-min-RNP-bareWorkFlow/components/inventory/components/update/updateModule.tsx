@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { KeyboardAvoidingView, View, Alert, Platform } from "react-native";
 import { Href, useRouter } from "expo-router";
 import axios from "axios";
@@ -6,6 +6,7 @@ import ButtonGroup from "./components/buttonGroup";
 import EditableTable from "./components/editableTable";
 import { Row } from "../TableComponents";
 import { getTimeStamp } from "@/util/time-manager";
+import { AuthContext } from "@/store/context/AuthContext";
 
 export interface DocumentProp {
   inventoryData: Row[];
@@ -24,6 +25,7 @@ export default function UpdateModule({
   const router = useRouter();
   const [localData, setLocalData] = useState<Row[]>(document.inventoryData);
   const [IsAsyncUploading, setIsAsyncUploading] = useState(false);
+  const auth = useContext(AuthContext);
 
   const resetData = () => {
     setLocalData((prevData) =>
@@ -45,6 +47,8 @@ export default function UpdateModule({
       setIsAsyncUploading(true);
       const response = await axios.post(document.uploadURL, {
         email: document.currentUserEmail,
+        nickname : auth.userInfo?.nickname,
+        realname : auth.userInfo?.realname,
         timestamp: getTimeStamp(),
         inventoryData: localData,
       });

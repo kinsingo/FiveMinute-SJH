@@ -22,7 +22,9 @@
         "android.permission.BLUETOOTH_ADMIN",
         "android.permission.BLUETOOTH_CONNECT",
         "android.permission.BLUETOOTH_SCAN",
-        "android.permission.ACCESS_FINE_LOCATION"
+        "android.permission.ACCESS_FINE_LOCATION",
+        "android.permission.ACCESS_COARSE_LOCATION",
+        "android.permission.BLUETOOTH_ADVERTISE"
       ],
       "package": "com.jonghyunshin.finveminutereactnativepaperapp"
     },
@@ -48,7 +50,13 @@
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
       ],
-      "react-native-ble-manager"
+      [
+        "react-native-ble-manager",
+        {
+          "isBleRequired": true,
+          "bluetoothAlwaysPermission": "The app needs constant access to Bluetooth to connect to devices."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useCallback } from "react";
+import { useState, useEffect, useContext, useCallback } from "react";
 import { StyleSheet, View, Alert } from "react-native";
 import { useScanBLEs, validIbeaconE7Name } from "@/hooks/useScanBLEs";
 import { Card, Text, RadioButton } from "react-native-paper";

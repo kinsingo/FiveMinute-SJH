@@ -7,7 +7,7 @@ import { AttendanceData } from "../../components/attendance/AttendanceTable";
 import MyActivityIndicator from "@/components/MyActivityIndicator";
 import SummaryTable from "../../components/attendance/SummaryTable";
 
-const ATTENDANCE_URL = "https://www.5minbowl.com/api/attendance";
+const ATTENDANCE_URL = "https://www.5minbowl.com/api/react-native-app-attendance-100days";
 
 export default function recent() {
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);

@@ -17,6 +17,7 @@ export default function EditableButtons({
   details,
   imageUrl,
   author,
+  email,
   isEditing,
   setIsEditing,
   setDetails,
@@ -28,6 +29,7 @@ export default function EditableButtons({
   details: string;
   imageUrl: string | null;
   author: string;
+  email: string;
   isEditing: boolean;
   setIsEditing: (isEditing: boolean) => void;
   setDetails: (details: string) => void;
@@ -37,7 +39,7 @@ export default function EditableButtons({
 }) {
   const router = useRouter();
   const auth = useContext(AuthContext);
-  const IsValidUser = auth.user?.email === author;
+  const IsValidUser = auth.user?.email === email;
 
   // Firestore에 수정된 데이터 업데이트
   const handleUpdateInstruction = async () => {

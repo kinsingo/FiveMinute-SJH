@@ -44,7 +44,8 @@ export default function SaveButton({
       }
       const newInstruction = {
         title,
-        author: auth.user?.email,
+        author: auth.userInfo?.nickname || auth.userInfo?.realname || auth.user?.email,
+        email: auth.user?.email,
         timestamp: getTimeStamp(),
         details,
         imageUrl: firebaseImageUrl || "",

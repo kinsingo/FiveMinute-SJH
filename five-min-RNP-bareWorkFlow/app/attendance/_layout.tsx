@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import React, { useState, useContext } from "react";
+import React, { useState, useContext} from "react";
 import { SafeAreaView, StyleSheet } from "react-native";
 import { SegmentedButtons } from "react-native-paper";
 import { AuthContext } from "@/store/context/AuthContext";
@@ -10,7 +10,7 @@ export default function Layout() {
   const router = useRouter();
 
   if (!auth.isLogin) {
-    return <LoginRequired router={router} title="근태 관리" />;
+     return <LoginRequired router={router} title="근태 관리" />;
   }
 
   return (
@@ -53,16 +53,16 @@ const SegmentedNavigation = () => {
         }}
         buttons={[
           {
-            value: "main",
-            label: "main",
+            value: "manage",
+            label: "출/퇴근",
           },
           {
-            value: "manage",
-            label: "manage",
+            value: "main",
+            label: "자세히",
           },
           {
             value: "recent",
-            label: "recent",
+            label: "요약",
           },
         ]}
       />

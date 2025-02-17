@@ -6,7 +6,7 @@ import axios from "axios";
 import AttendanceTable, { AttendanceData } from "../../components/attendance/AttendanceTable";
 import MyActivityIndicator from "@/components/MyActivityIndicator";
 
-const ATTENDANCE_URL = "https://www.5minbowl.com/api/attendance";
+const ATTENDANCE_URL = "https://www.5minbowl.com/api/react-native-app-attendance-100days";
 
 export default function main() {
   const [attendanceData, setAttendanceData] = useState<AttendanceData[]>([]);

@@ -1,7 +1,7 @@
 import React from "react";
-import { ScrollView, View, StyleSheet } from "react-native";
+import {  View, StyleSheet } from "react-native";
 import { RadioButton, Text } from "react-native-paper";
-
+import { MyHorizontalScrollView } from "@/components/MyScrollView";
 export const categories: string[] = [
   "전부 다 보기",
   "주재료",
@@ -18,23 +18,17 @@ export const categories: string[] = [
 ];
 
 interface CategorySelectorProps {
-  isThemeDark: boolean;
   selectedCategory: string;
   setSelectedCategory: (category: string) => void;
 }
 
 export default function CategorySelector({
-  isThemeDark,
   selectedCategory,
   setSelectedCategory,
 }: CategorySelectorProps) {
   return (
     <View style={{ paddingVertical: 5 }}>
-      <ScrollView
-        horizontal
-        showsHorizontalScrollIndicator={true}
-        indicatorStyle={isThemeDark ? "white" : "black"}
-      >
+      <MyHorizontalScrollView>
         <RadioButton.Group
           onValueChange={(value) => setSelectedCategory(value)}
           value={selectedCategory}
@@ -48,7 +42,7 @@ export default function CategorySelector({
             ))}
           </View>
         </RadioButton.Group>
-      </ScrollView>
+      </MyHorizontalScrollView>
     </View>
   );
 }

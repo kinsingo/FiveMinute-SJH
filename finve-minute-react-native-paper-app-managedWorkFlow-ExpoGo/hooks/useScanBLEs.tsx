@@ -1,3 +1,6 @@
+/**
+ * Sample BLE React Native App
+ */
 import { useState, useEffect, useRef } from "react";
 import { Platform, PermissionsAndroid } from "react-native";
 import BleManager, {
@@ -28,7 +31,7 @@ function IsVlaidIDType(id: string) {
 
 export function useScanBLEs() {
   const [isScanning, setIsScanning] = useState(false);
-  const validBeaconNameRef = useRef<validIbeaconE7Name>("5minSN"); // ✅ 최신값 유지
+  const validBeaconNameRef = useRef<validIbeaconE7Name>("5minGN"); // ✅ 최신값 유지
   const peripheralsRef = useRef(new Map<Peripheral["id"], Peripheral>()); // 최신 상태 유지용 Ref
   
   async function startScan() {
@@ -101,7 +104,6 @@ export function useScanBLEs() {
       PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
-        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION,//이거 꼭 필요함..! 없으면 안됨 (내가 ibeacon 스캔 필요하기 때문)
       ]).then((result) => {
         if (result) {
           console.debug("[handleAndroidPermissions] User accepts runtime permissions android 12+");

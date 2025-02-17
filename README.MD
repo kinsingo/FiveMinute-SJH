@@ -73,3 +73,12 @@ service firebase.storage {
       allow read, write: if true;
     }
   }
+5) android 및 ios 폴더 삭제하고, expo prebuild 하면 app.json 설정이 andorid 및 iso 폴더 설정에 반영됨. (폴더 직접 수정은 노노)
+6) react-native-ble-manager
+Generate Android code
+in the example folder generate the android project from expo: npx expo prebuild --platform android
+in the example/android folder run: ./gradlew generateCodegenArtifactsFromSchema (you can add --info to have debug messages)
+if you have problems with the gradle cache cd android && ./gradlew --stop && rm -rf ~/.gradle/caches
+Generate iOS code
+in the example folder generate the ios project from expo: npx expo prebuild --platform ios
+the codegen run during the first build, if you need to run it again use pod install in the ios folder
