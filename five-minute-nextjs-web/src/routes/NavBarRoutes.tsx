@@ -27,6 +27,7 @@
 //import DashboardIcon from "@mui/icons-material/Dashboard";
 import KitchenIcon from '@mui/icons-material/Kitchen';
 import AccessTimeIcon  from '@mui/icons-material/AccessTime';
+import AppsIcon from '@mui/icons-material/Apps';
 //import ContactsIcon from "@mui/icons-material/Contacts";
 //import ArticleIcon from "@mui/icons-material/Article";
 
@@ -85,6 +86,16 @@ const routes : RouteItem[] = [
       {
         name: "대시보드",
         route: "/attendance/",
+      },
+    ],
+  },
+  {
+    name: "모바일앱",
+    icon: <AppsIcon/>,
+    collapse: [
+      {
+        name: "다운로드",
+        route: "/mobileApp/",
       },
     ],
   },
