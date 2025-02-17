@@ -64,7 +64,7 @@ export default function MobileDownloadPage() {
           ✅ Android 보안 설정 변경
         </Typography>
         <Typography variant="body2" color="textSecondary" mb={1}>
-          APK 설치 시 <strong>"출처를 알 수 없는 앱 설치 허용"</strong> 설정이
+          APK 설치 시 <strong>출처를 알 수 없는 앱 설치 허용</strong> 설정이
           필요할 수 있습니다.
         </Typography>
       </Card>
