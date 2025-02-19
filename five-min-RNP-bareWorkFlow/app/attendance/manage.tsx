@@ -60,6 +60,7 @@ export default function WorkAttendanceScreen() {
 
   async function CheckinForWork(attendanceIndex: number) {
     setIsLoading(true);
+
     if (await IsVaidArea()) {
       try {
         const timestamp = get24hTime();
@@ -156,9 +157,18 @@ export default function WorkAttendanceScreen() {
               value={selectedLocation}
             >
               <View style={styles.radioContainer}>
-                <RadioButton.Item label="강남점" value="5minGN" />
-                <RadioButton.Item label="수내점" value="5minSN" />
-                <RadioButton.Item label="관악점" value="5minSL" />
+                <View style={styles.radioItem}>
+                  <RadioButton.Android value="5minGN" />
+                  <Text>강남점</Text>
+                </View>
+                <View style={styles.radioItem}>
+                  <RadioButton.Android value="5minSN" />
+                  <Text>수내점</Text>
+                </View>
+                <View style={styles.radioItem}>
+                  <RadioButton.Android value="5minSL" />
+                  <Text>관악점</Text>
+                </View>
               </View>
             </RadioButton.Group>
           </ScrollView>
@@ -206,5 +216,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     flexDirection: "row",
     flexWrap: "wrap",
+  },
+  radioItem: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginHorizontal: 3,
   },
 });

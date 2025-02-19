@@ -21,7 +21,7 @@ extensions.configure(com.facebook.react.ReactSettingsExtension) { ex ->
   }
 }
 
-rootProject.name = '5분 덮밥'
+rootProject.name = 'FiveMinuteRiceBowl'
 
 dependencyResolutionManagement {
   versionCatalogs {

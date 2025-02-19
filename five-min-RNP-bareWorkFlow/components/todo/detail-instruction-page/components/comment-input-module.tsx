@@ -1,8 +1,10 @@
 import React from "react";
 import { View, StyleSheet } from "react-native";
-import {TextInput } from "react-native-paper";
+import { TextInput } from "react-native-paper";
 import PickImageButton from "@/components/todo/detail-instruction-page/components/pick-image-button";
-import AddCommentButton,{AddCommentButtonProps} from "@/components/todo/detail-instruction-page/components/add-comment-button";
+import AddCommentButton, {
+  AddCommentButtonProps,
+} from "@/components/todo/detail-instruction-page/components/add-comment-button";
 
 export default function CommentInputModule({
   id,
@@ -26,6 +28,7 @@ export default function CommentInputModule({
         dense
         disabled={IsSaving}
       />
+
       {content.trim() !== "" && (
         <AddCommentButton
           id={id as string}

@@ -19,7 +19,14 @@ declare module "react-native-ble-manager" {
 }
 
 export type validIbeaconE7Name = "5minGN" | "5minSN" | "5minSL";
+
+// 안드로이드에서는, BLE 스캔을 통해 찾은 디바이스의 ID를 통해 유효한 디바이스인지 확인
+// iOS에서는, 디바이스의 이름만 가지고 유효한 디바이스인지 확인 (필요시 추후 다른 방법 고안, 근데 솔직히 누가 비콘 새로 사서 조작할거 같지는 않음)
+// iOS에서는 ID를 확인할 수 없음, 보안 정책상 MAC Address 가 임의의 uuid로 변경되어 있음, 헤당 uuid는 계속 바뀔수 있는거라 사용 불가
 function IsVlaidIDType(id: string) {
+  console.log("id:" + id);
+
+  if(Platform.OS === "ios") return true;
   if (id === "C3:00:00:3F:38:DD") return true; //5minGN
   if (id === "C3:00:00:3F:38:D2") return true; //5minSN
   if (id === "C3:00:00:3F:37:4B") return true; //5minSL
@@ -68,6 +75,7 @@ export function useScanBLEs() {
         `✅ Found valid peripheral: ${peripheral.name}, validBeaconName: ${validBeaconNameRef.current}
         , ValidID: ${peripheral.id}`
       );
+
       peripheralsRef.current.set(peripheral.id, peripheral);
     }
   };
@@ -87,7 +95,8 @@ export function useScanBLEs() {
       BleManager.onStopScan(handleStopScan),
     ];
 
-    handleAndroidPermissions();
+    handlePermissions();
+
     return () => {
       console.debug("[app] main component unmounting. Removing listeners...");
       for (const listener of listeners) {
@@ -96,8 +105,12 @@ export function useScanBLEs() {
     };
   }, []);
 
-  const handleAndroidPermissions = () => {
-    if (Platform.OS === "android" && Platform.Version >= 31) {
+  const handlePermissions = () => {
+    if (Platform.OS === "ios") {
+      BleManager.enableBluetooth()
+        .then(() => console.log("✅ Bluetooth enabled"))
+    } 
+    else if (Platform.OS === "android" && Platform.Version >= 31) {
       PermissionsAndroid.requestMultiple([
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
         PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,

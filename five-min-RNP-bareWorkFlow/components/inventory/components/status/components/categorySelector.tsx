@@ -56,6 +56,6 @@ const styles = StyleSheet.create({
   radioButtonItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginHorizontal: 10,
+    marginHorizontal: 3,
   },
 });

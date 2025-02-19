@@ -167,7 +167,7 @@ const AccountManagementScreen = () => {
                   <MyHorizontalScrollView>
                     {["직원", "매니저", "점장", "사장"].map((role) => (
                       <View key={role} style={styles.radioItem}>
-                        <RadioButton color={componentColor} value={role} />
+                        <RadioButton.Android color={componentColor} value={role} />
                         <Text>{role}</Text>
                       </View>
                     ))}
@@ -189,7 +189,7 @@ const AccountManagementScreen = () => {
                   <Text style={cardTextStyle}>성별: </Text>
                   {["남자", "여자"].map((gender) => (
                     <View key={gender} style={styles.radioItem}>
-                      <RadioButton color={componentColor} value={gender} />
+                      <RadioButton.Android color={componentColor} value={gender} />
                       <Text>{gender}</Text>
                     </View>
                   ))}
@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   radioItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight: 20,
+    marginRight:3,
   },
   text: {
     marginBottom: 10,

@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "5분 덮밥",
+    "name": "FiveMinuteRiceBowl",
     "slug": "finve-minute-react-native-paper-app",
     "version": "1.0.0",
     "orientation": "portrait",
@@ -12,7 +12,15 @@
       "supportsTablet": true,
       "bundleIdentifier": "com.jonghyunshin.finveminutereactnativepaperapp",
       "infoPlist": {
-        "ITSAppUsesNonExemptEncryption": false
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to connect to devices nearby.",
+        "NSBluetoothPeripheralUsageDescription": "This app requires Bluetooth access to communicate with peripherals.",
+        "NSLocationWhenInUseUsageDescription": "This app requires location access to scan for nearby Bluetooth devices.",
+        "NSLocationAlwaysUsageDescription": "This app requires location access even when the app is in the background to detect nearby Bluetooth devices.",
+        "UIBackgroundModes": [
+          "bluetooth-central",
+          "bluetooth-peripheral"
+        ]
       }
     },
     "android": {
@@ -24,7 +32,8 @@
         "android.permission.BLUETOOTH_SCAN",
         "android.permission.ACCESS_FINE_LOCATION",
         "android.permission.ACCESS_COARSE_LOCATION",
-        "android.permission.BLUETOOTH_ADVERTISE"
+        "android.permission.BLUETOOTH_ADVERTISE",
+        "android.permission.ACCESS_BACKGROUND_LOCATION"
       ],
       "package": "com.jonghyunshin.finveminutereactnativepaperapp"
     },

@@ -1,5 +1,5 @@
 "use client";
-import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
+import { Card, CardContent, Typography, Box, Grid, Divider } from "@mui/material";
 import AndroidIcon from "@mui/icons-material/Android";
 import AppleIcon from "@mui/icons-material/Apple";
 
@@ -60,6 +60,7 @@ export default function MobileDownloadPage() {
           </Grid>
         </CardContent>
 
+        <Divider />
         <Typography variant="h6" fontWeight="bold" gutterBottom>
           ✅ Android 보안 설정 변경
         </Typography>
@@ -67,6 +68,16 @@ export default function MobileDownloadPage() {
           APK 설치 시 <strong>출처를 알 수 없는 앱 설치 허용</strong> 설정이
           필요할 수 있습니다.
         </Typography>
+
+        <Divider />
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
+          ✅ Android 보안 설정 변경
+        </Typography>
+        <Typography variant="body2" color="textSecondary" mb={1}>
+          APK 설치 시 <strong>출처를 알 수 없는 앱 설치 허용</strong> 설정이
+          필요할 수 있습니다.
+        </Typography>
+
       </Card>
     </Box>
   );
