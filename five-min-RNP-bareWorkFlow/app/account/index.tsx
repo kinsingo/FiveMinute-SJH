@@ -255,7 +255,7 @@ const styles = StyleSheet.create({
   radioItem: {
     flexDirection: "row",
     alignItems: "center",
-    marginRight:3,
+    marginRight: 3,
   },
   text: {
     marginBottom: 10,

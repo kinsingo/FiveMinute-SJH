@@ -6,7 +6,7 @@ import axios from "axios";
 import { AttendanceData } from "../../components/attendance/AttendanceTable";
 import MyActivityIndicator from "@/components/MyActivityIndicator";
 import SummaryTable from "../../components/attendance/SummaryTable";
-//import ScanDevicesScreen from "@/components/attendance/ScanDevicesScreen";
+// import ScanDevicesScreen from "@/components/attendance/ScanDevicesScreen";
 
 const ATTENDANCE_URL = "https://www.5minbowl.com/api/react-native-app-attendance-100days";
 
