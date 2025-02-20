@@ -167,6 +167,7 @@ export default function SignInScreen() {
                   mode="outlined"
                   value={email.value}
                   onChangeText={(text) => setEmail({ ...email, value: text })}
+                  autoCapitalize="none"      // ✅ 자동 대문자 변환 방지
                   disabled={loading}
                   style={[
                     styles.input,
@@ -182,6 +183,7 @@ export default function SignInScreen() {
                 <TextInput
                   label="Password"
                   mode="outlined"
+                  autoCapitalize="none"      // ✅ 자동 대문자 변환 방지
                   value={password.value}
                   onChangeText={(text) =>
                     setPassword({ ...password, value: text })
@@ -253,8 +255,6 @@ export default function SignInScreen() {
 const styles = StyleSheet.create({
   background: {
     flex: 1,
-    width: "100%",
-    height: "100%",
   },
   container: {
     flex: 1,
@@ -263,11 +263,12 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   card: {
-    width: "100%",
     maxWidth: 400,
+    maxHeight: 450,
     padding: 16,
     borderRadius: 8,
     elevation: 4,
+    justifyContent: "center",
   },
   header: {
     alignItems: "center",

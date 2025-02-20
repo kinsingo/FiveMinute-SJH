@@ -30,13 +30,15 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    width: "80%",
+    width: 450,
     padding: 20,
   },
   cardCover: {
     height: 250,
-    resizeMode: "center",
+    width: 250,
+    resizeMode: "stretch",
     backgroundColor: "transparent",
+    alignSelf: "center",
   },
   centerButton: {
     alignSelf: "center",

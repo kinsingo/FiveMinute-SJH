@@ -1,6 +1,7 @@
 import { Image, View } from "react-native";
 import { Text, Divider, Icon } from "react-native-paper";
 import { MyVerticalScrollView } from "@/components/MyScrollView";
+import { useWindowDimensions } from "react-native";
 
 const donburiItems = [
   "[모두의 제육] 직화제육덮밥 도시락",
@@ -74,10 +75,11 @@ const menuCategories = [
 ];
 
 export default function HomeScreen() {
+  const { width } = useWindowDimensions();
+  const isPad = width >= 768;
   return (
     <MyVerticalScrollView>
-      {/* 메인 이미지 */}
-      <View style={{ height: 250 }}>
+      <View style={{ height: isPad ? 500 : 250 }}>
         <Image
           source={require("@/assets/images/Main-Page.png")}
           style={{ width: "100%", height: "100%" }}

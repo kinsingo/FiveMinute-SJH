@@ -236,6 +236,9 @@ const styles = StyleSheet.create({
   card: {
     padding: 10,
     borderRadius: 10,
+    justifyContent: "center",
+    maxHeight: 600,
+    elevation: 10,
   },
   profileContainer: {
     alignItems: "center",
