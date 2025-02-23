@@ -69,7 +69,7 @@ export default function DetailInstructionModule({ Location }: { Location: Locati
       <KeyboardAvoidingView
         style={{ flex: 1 }}
         behavior={Platform.OS === "ios" ? "padding" : "height"}
-        keyboardVerticalOffset={Platform.OS === "ios" ? 140 : 0}
+        keyboardVerticalOffset={Platform.OS === "ios" ? 150 : 0} //140 --> 150, 250223 (나령폰 확인 결과)
       >
         <ScrollView
           ref={scrollViewRef}
