@@ -56,13 +56,13 @@
     <key>NSBluetoothAlwaysUsageDescription</key>
     <string>The app needs constant access to Bluetooth to connect to devices.</string>
     <key>NSBluetoothPeripheralUsageDescription</key>
-    <string>This app requires Bluetooth access to communicate with peripherals.</string>
+    <string>This app requires Bluetooth access to communicate with BLE beacons for attendance tracking and authentication purposes.</string>
     <key>NSCameraUsageDescription</key>
-    <string>Allow $(PRODUCT_NAME) to access your camera</string>
+    <string>Allow $(PRODUCT_NAME) to access your camera to capture and upload images when creating or commenting on work instructions.</string>
     <key>NSLocationAlwaysUsageDescription</key>
-    <string>This app requires location access even when the app is in the background to detect nearby Bluetooth devices.</string>
+    <string>This app requires continuous location access to detect and verify attendance even when running in the background, ensuring seamless check-in and check-out functionality.</string>
     <key>NSLocationWhenInUseUsageDescription</key>
-    <string>This app requires location access to scan for nearby Bluetooth devices.</string>
+    <string>This app requires location access to scan for nearby Bluetooth beacons, ensuring accurate attendance tracking at designated work locations.</string>
     <key>NSMicrophoneUsageDescription</key>
     <string>Allow $(PRODUCT_NAME) to access your microphone</string>
     <key>NSPhotoLibraryUsageDescription</key>

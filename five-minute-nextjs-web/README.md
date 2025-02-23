@@ -8,3 +8,6 @@
   
 ## 250207
   1. 관악점(Sinlim) Inventory api/page 추가함 
+  
+## 250220 
+  1. Android APK 업데이트함

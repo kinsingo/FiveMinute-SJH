@@ -13,10 +13,11 @@
       "bundleIdentifier": "com.jonghyunshin.finveminutereactnativepaperapp",
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false,
-        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth to connect to devices nearby.",
-        "NSBluetoothPeripheralUsageDescription": "This app requires Bluetooth access to communicate with peripherals.",
-        "NSLocationWhenInUseUsageDescription": "This app requires location access to scan for nearby Bluetooth devices.",
-        "NSLocationAlwaysUsageDescription": "This app requires location access even when the app is in the background to detect nearby Bluetooth devices."
+        "NSCameraUsageDescription": "Allow $(PRODUCT_NAME) to access your camera to capture and upload images when creating or commenting on work instructions.",
+        "NSBluetoothAlwaysUsageDescription": "This app uses Bluetooth Low Energy (BLE) to detect and verify employees' attendance by connecting to nearby authorized devices.",
+        "NSBluetoothPeripheralUsageDescription": "This app requires Bluetooth access to communicate with BLE beacons for attendance tracking and authentication purposes.",
+        "NSLocationWhenInUseUsageDescription": "This app requires location access to scan for nearby Bluetooth beacons, ensuring accurate attendance tracking at designated work locations.",
+        "NSLocationAlwaysUsageDescription": "This app requires continuous location access to detect and verify attendance even when running in the background, ensuring seamless check-in and check-out functionality."
       }
     },
     "android": {
