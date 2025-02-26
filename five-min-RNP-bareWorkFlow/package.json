@@ -19,6 +19,7 @@
     "@react-navigation/bottom-tabs": "^7.2.0",
     "@react-navigation/drawer": "^7.1.1",
     "@react-navigation/native": "^7.0.14",
+    "@shopify/react-native-skia": "1.5.0",
     "@types/date-fns": "^2.5.3",
     "axios": "^1.7.9",
     "buffer": "^6.0.3",
@@ -56,6 +57,7 @@
     "react-native-screens": "~4.4.0",
     "react-native-web": "~0.19.13",
     "react-native-webview": "13.12.5",
+    "react-native-svg": "15.8.0",
     "victory-native": "^41.16.1"
   },
   "devDependencies": {

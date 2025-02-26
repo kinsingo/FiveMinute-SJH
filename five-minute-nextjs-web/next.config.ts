@@ -12,6 +12,7 @@ const nextConfig = (phase: string): NextConfig => {
       NEXTAUTH_SECRET: process.env.FIVE_MIN_NEXTAUTH_SECRET,
       SMTP_USER: process.env.FIVE_MIN_SMTP_USER,
       SMTP_PASS: process.env.FIVE_MIN_SMTP_PASS,
+      JWT_TOKEN_SECRET : process.env.JWT_TOKEN_SECRET,
       MONGO_URI: isDev ? process.env.FIVE_MIN_MONGO_URI_DEV : process.env.FIVE_MIN_MONGO_URI_PROD,
       BASE_URL: isDev
         ? "http://localhost:3000" // 로컬 개발 환경 기본값

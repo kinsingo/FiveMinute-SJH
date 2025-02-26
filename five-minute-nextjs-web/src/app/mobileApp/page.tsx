@@ -5,9 +5,8 @@ import AppleIcon from "@mui/icons-material/Apple";
 
 //100MB 미만일 경우, Github에 업로드하여 다운로드 가능
 //나중에 100MB 넘어가게 되면 AWS S3에 업로드하여 다운로드 가능 (Presigned URL 사용)
-const ANDROID_APP_URL =
-  "https://raw.githubusercontent.com/kinsingo/5minDonburi/main/_5min_250220.apk";
-const IOS_APP_URL = "TBD";
+const ANDROID_APP_URL = "https://firebasestorage.googleapis.com/v0/b/fiveminutedonburi.firebasestorage.app/o/_5min.apk?alt=media&token=9f27395a-558e-4c7f-b384-60930a1e7c34";
+const IOS_APP_URL = "https://apps.apple.com/us/app/fiveminutericebowl/id6742189608";
 import MKButton from "@/MKcomponents/MKButton";
 
 export default function MobileDownloadPage() {
@@ -52,7 +51,7 @@ export default function MobileDownloadPage() {
                 startIcon={<AppleIcon />}
                 fullWidth
                 href={IOS_APP_URL}
-                disabled
+                rel="noopener noreferrer"
               >
                 App Store에서 다운로드 가능
               </MKButton>

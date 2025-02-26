@@ -50,4 +50,4 @@ enum InventoryCollectionName {
   sinlim = "inventory-status-sinlim",
 }
 
-export { getPublicCollection, InventoryCollectionName };
+export { getPublicCollection, getConnectedPublicDB, InventoryCollectionName };
