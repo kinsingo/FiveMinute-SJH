@@ -24,7 +24,7 @@ export interface UserInfo {
   gender: string;
 }
 
-interface AuthContextType {
+export interface AuthContextType {
   login: ({ email, password }: { email: string; password: string }) => Promise<any>;
   logout: () => Promise<boolean>;
   delete: () => Promise<void>;
@@ -167,11 +167,9 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   const deleteAccount = async (): Promise<void> => {
     try {
       const token = await SecureStore.getItemAsync(TOKEN_KEY);
-      if(!token)
-        throw new Error("토큰이 존재하지 않습니다.");
+      if (!token) throw new Error("토큰이 존재하지 않습니다.");
       const userEmail = await SecureStore.getItemAsync(EMAIL_KEY);
-      if (!userEmail) 
-        throw new Error("이메일이 존재하지 않습니다.");
+      if (!userEmail) throw new Error("이메일이 존재하지 않습니다.");
       const response = await axios.delete(AUTH_URL, {
         headers: {
           "Content-Type": "application/json",
@@ -179,8 +177,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
         },
         data: { email: userEmail },
       });
-      if (!response.data.success)
-        throw new Error("계정 삭제 실패:", response.data.message);
+      if (!response.data.success) throw new Error("계정 삭제 실패:", response.data.message);
     } catch (error: any) {
       throw new Error("계정 삭제 요청 중 오류 발생:", error.message);
     }
@@ -197,17 +194,13 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   };
 
   const getRecommendedUserName = () => {
-    if(userInfo)
-    {
-      if(userInfo.nickname)
-        return userInfo.nickname;
-      if(userInfo.realname)
-        return userInfo.realname;
-      if(userInfo.email)
-        return userInfo.email;
+    if (userInfo) {
+      if (userInfo.nickname) return userInfo.nickname;
+      if (userInfo.realname) return userInfo.realname;
+      if (userInfo.email) return userInfo.email;
     }
     return "";
-  }
+  };
 
   const value = {
     login,

@@ -39,7 +39,7 @@ export default function EditableButtons({
 }) {
   const router = useRouter();
   const auth = useContext(AuthContext);
-  const IsValidUser = auth.user?.email === email;
+  const IsValidUser = auth.user?.isAdmin || auth.user?.email === email;
 
   // Firestore에 수정된 데이터 업데이트
   const handleUpdateInstruction = async () => {

@@ -1,5 +1,13 @@
 import React, { useState, useCallback, useContext, useEffect } from "react";
-import { View, StyleSheet, Image, Alert, ImageBackground } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Image,
+  Alert,
+  ImageBackground,
+  TouchableWithoutFeedback,
+  Keyboard,
+} from "react-native";
 import { Text, TextInput, Button, RadioButton, Card, useTheme } from "react-native-paper";
 import { useFocusEffect } from "@react-navigation/native";
 import { MyHorizontalScrollView } from "@/components/MyScrollView";
@@ -7,6 +15,7 @@ import axios from "axios";
 import { AuthContext, ACCOUNT_INFO_URL, UserInfo } from "@/store/context/AuthContext";
 import MyActivityIndicator from "@/components/MyActivityIndicator";
 import { useRouter } from "expo-router";
+
 const AccountManagementScreen = () => {
   const [isLoading, setIsLoading] = useState(false);
   const auth = useContext(AuthContext);
@@ -108,117 +117,120 @@ const AccountManagementScreen = () => {
       style={styles.background}
       resizeMode="cover" // 이미지가 화면을 덮도록 설정
     >
-      <View style={styles.container}>
-        <Card style={[styles.card, { backgroundColor: backgroundColor }]} mode="contained">
-          <Card.Content>
-            <View style={styles.profileContainer}>
-              <Image source={profileImage} style={styles.profileImage} />
-            </View>
-            <Text variant="bodyLarge" style={cardTextStyle}>
-              이메일: {userInfo.email}
-            </Text>
-            {editable ? (
-              <TextInput
-                label="닉네임"
-                value={userInfo.nickname}
-                onChangeText={(text) => setUserInfo({ ...userInfo, nickname: text })}
-                style={cardTextStyle}
-              />
-            ) : (
+      <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <View style={styles.container}>
+          <Card style={[styles.card, { backgroundColor: backgroundColor }]} mode="contained">
+            <Card.Content>
+              <View style={styles.profileContainer}>
+                <Image source={profileImage} style={styles.profileImage} />
+              </View>
               <Text variant="bodyLarge" style={cardTextStyle}>
-                닉네임: {userInfo.nickname}
+                이메일: {userInfo.email}
               </Text>
-            )}
-            {editable ? (
-              <TextInput
-                label="이름"
-                value={userInfo.realname}
-                onChangeText={(text) => setUserInfo({ ...userInfo, realname: text })}
-                style={cardTextStyle}
-              />
-            ) : (
-              <Text variant="bodyLarge" style={cardTextStyle}>
-                이름: {userInfo.realname}
-              </Text>
-            )}
 
-            {editable ? (
-              <TextInput
-                label="주민번호 앞 자리 (YYMMDD)"
-                value={userInfo.birthdate}
-                keyboardType="numeric"
-                maxLength={6}
-                onChangeText={(text) => setUserInfo({ ...userInfo, birthdate: text })}
-                style={cardTextStyle}
-              />
-            ) : (
-              <Text variant="bodyLarge" style={cardTextStyle}>
-                생년월일: {userInfo.birthdate}
-              </Text>
-            )}
+              {editable ? (
+                <TextInput
+                  label="닉네임"
+                  value={userInfo.nickname}
+                  onChangeText={(text) => setUserInfo({ ...userInfo, nickname: text })}
+                  style={cardTextStyle}
+                />
+              ) : (
+                <Text variant="bodyLarge" style={cardTextStyle}>
+                  닉네임: {userInfo.nickname}
+                </Text>
+              )}
+              {editable ? (
+                <TextInput
+                  label="이름"
+                  value={userInfo.realname}
+                  onChangeText={(text) => setUserInfo({ ...userInfo, realname: text })}
+                  style={cardTextStyle}
+                />
+              ) : (
+                <Text variant="bodyLarge" style={cardTextStyle}>
+                  이름: {userInfo.realname}
+                </Text>
+              )}
 
-            {editable ? (
-              <RadioButton.Group
-                onValueChange={(value) => setUserInfo({ ...userInfo, position: value })}
-                value={userInfo.position}
-              >
-                <View style={styles.radioContainer}>
-                  <Text style={cardTextStyle}>직책: </Text>
-                  <MyHorizontalScrollView>
-                    {["직원", "매니저", "점장", "사장"].map((role) => (
-                      <View key={role} style={styles.radioItem}>
-                        <RadioButton.Android color={componentColor} value={role} />
-                        <Text>{role}</Text>
+              {editable ? (
+                <TextInput
+                  label="주민번호 앞 자리 (YYMMDD)"
+                  value={userInfo.birthdate}
+                  keyboardType="numeric"
+                  maxLength={6}
+                  onChangeText={(text) => setUserInfo({ ...userInfo, birthdate: text })}
+                  style={cardTextStyle}
+                />
+              ) : (
+                <Text variant="bodyLarge" style={cardTextStyle}>
+                  생년월일: {userInfo.birthdate}
+                </Text>
+              )}
+
+              {editable ? (
+                <RadioButton.Group
+                  onValueChange={(value) => setUserInfo({ ...userInfo, position: value })}
+                  value={userInfo.position}
+                >
+                  <View style={styles.radioContainer}>
+                    <Text style={cardTextStyle}>직책: </Text>
+                    <MyHorizontalScrollView>
+                      {["직원", "매니저", "점장", "사장"].map((role) => (
+                        <View key={role} style={styles.radioItem}>
+                          <RadioButton.Android color={componentColor} value={role} />
+                          <Text>{role}</Text>
+                        </View>
+                      ))}
+                    </MyHorizontalScrollView>
+                  </View>
+                </RadioButton.Group>
+              ) : (
+                <Text variant="bodyLarge" style={cardTextStyle}>
+                  직책: {userInfo.position}
+                </Text>
+              )}
+
+              {editable ? (
+                <RadioButton.Group
+                  onValueChange={(value) => setUserInfo({ ...userInfo, gender: value })}
+                  value={userInfo.gender}
+                >
+                  <View style={styles.radioContainer}>
+                    <Text style={cardTextStyle}>성별: </Text>
+                    {["남자", "여자"].map((gender) => (
+                      <View key={gender} style={styles.radioItem}>
+                        <RadioButton.Android color={componentColor} value={gender} />
+                        <Text>{gender}</Text>
                       </View>
                     ))}
-                  </MyHorizontalScrollView>
-                </View>
-              </RadioButton.Group>
-            ) : (
-              <Text variant="bodyLarge" style={cardTextStyle}>
-                직책: {userInfo.position}
-              </Text>
-            )}
-
-            {editable ? (
-              <RadioButton.Group
-                onValueChange={(value) => setUserInfo({ ...userInfo, gender: value })}
-                value={userInfo.gender}
+                  </View>
+                </RadioButton.Group>
+              ) : (
+                <Text variant="bodyLarge" style={cardTextStyle}>
+                  성별: {userInfo.gender}
+                </Text>
+              )}
+            </Card.Content>
+            <Card.Actions>
+              <Button
+                textColor={theme.colors.secondary}
+                buttonColor={theme.colors.secondaryContainer}
+                onPress={() => router.push("/(tabs)/authentication/login")}
               >
-                <View style={styles.radioContainer}>
-                  <Text style={cardTextStyle}>성별: </Text>
-                  {["남자", "여자"].map((gender) => (
-                    <View key={gender} style={styles.radioItem}>
-                      <RadioButton.Android color={componentColor} value={gender} />
-                      <Text>{gender}</Text>
-                    </View>
-                  ))}
-                </View>
-              </RadioButton.Group>
-            ) : (
-              <Text variant="bodyLarge" style={cardTextStyle}>
-                성별: {userInfo.gender}
-              </Text>
-            )}
-          </Card.Content>
-          <Card.Actions>
-            <Button
-              textColor={theme.colors.secondary}
-              buttonColor={theme.colors.secondaryContainer}
-              onPress={() => router.push("/(tabs)/authentication/login")}
-            >
-              로그인/로그아웃
-            </Button>
-            <Button
-              buttonColor={componentColor}
-              textColor={textColor}
-              onPress={() => (editable ? handleSave() : setEditable(true))}
-            >
-              {editable ? "저장" : "수정"}
-            </Button>
-          </Card.Actions>
-        </Card>
-      </View>
+                로그인/로그아웃
+              </Button>
+              <Button
+                buttonColor={componentColor}
+                textColor={textColor}
+                onPress={() => (editable ? handleSave() : setEditable(true))}
+              >
+                {editable ? "저장" : "수정"}
+              </Button>
+            </Card.Actions>
+          </Card>
+        </View>
+      </TouchableWithoutFeedback>
     </ImageBackground>
   );
 };

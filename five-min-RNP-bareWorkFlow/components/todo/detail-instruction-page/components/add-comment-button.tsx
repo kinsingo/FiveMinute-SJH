@@ -54,6 +54,7 @@ export default function AddCommentButton({
         author: auth.userInfo?.nickname || auth.userInfo?.realname || auth.user?.email as string,
         email: auth.user?.email as string,
         timestamp: getTimeStamp(),
+        realTime: new Date().toISOString(),
         commentImageUrl: firebaseImageUrl || "",
       } as CommentProps;
       await addInstructionComments({

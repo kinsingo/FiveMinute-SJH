@@ -1,10 +1,5 @@
 import React, { useState, useEffect, useRef, useContext } from "react";
-import {
-  View,
-  ScrollView,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { View, ScrollView, KeyboardAvoidingView, Platform } from "react-native";
 import { useLocalSearchParams } from "expo-router";
 import EditableButtons from "@/components/todo/detail-instruction-page/editable-buttons";
 import TodoDetailCard from "@/components/todo/detail-instruction-page/todo-detail-card";
@@ -52,8 +47,7 @@ export default function DetailInstructionModule({ Location }: { Location: Locati
         ...doc.data(),
       })) as CommentProps[];
 
-      loadedComments.sort((a, b) => a.timestamp.localeCompare(b.timestamp));
-
+      loadedComments.sort((a, b) => a.realTime.localeCompare(b.realTime));
       setComments(loadedComments);
 
       setTimeout(() => {

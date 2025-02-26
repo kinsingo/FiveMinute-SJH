@@ -1,11 +1,16 @@
 import { SafeAreaView, StyleSheet, View } from "react-native";
 import { Card, Button } from "react-native-paper";
 
-export default function LoginRequired({ title , router }:  { title:string, router: any }) {
+export default function LoginRequired({ title, router }: { title: string; router: any }) {
   return (
     <SafeAreaView style={styles.centerContainer}>
       <Card style={styles.card}>
-        <Card.Title title={title} subtitle={"로그인 후 이용 가능합니다"} subtitleStyle={{textAlign:"center"}} titleStyle={{textAlign:"center"}} />
+        <Card.Title
+          title={title}
+          subtitle={"로그인 후 이용 가능합니다"}
+          subtitleStyle={{ textAlign: "center" }}
+          titleStyle={{ textAlign: "center" }}
+        />
         <Card.Cover
           source={require("../assets/images/android-chrome-512x512.png")}
           style={styles.cardCover}
@@ -30,7 +35,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   card: {
-    width: 450,
+    width: 300,
     padding: 20,
   },
   cardCover: {

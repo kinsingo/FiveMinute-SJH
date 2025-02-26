@@ -28,6 +28,7 @@ export interface CommentProps {
   author: string;
   email: string;
   timestamp: string;
+  realTime: string;
   commentImageUrl: string;
 }
 
@@ -175,7 +176,7 @@ export const deleteInstructionComment = async ({
         getTopLevelCollectionName(Location), // 🔹 "instructions-Bundang"
         instructionId, // 🔹 지시사항 문서 ID
         getSubCollectionName(Location), // 🔹 "comments-Bundang"
-        commentId // ✅ 삭제할 댓글 문서 ID 
+        commentId // ✅ 삭제할 댓글 문서 ID
       )
     );
   } catch (error) {

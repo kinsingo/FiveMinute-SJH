@@ -6,6 +6,7 @@ import StatusDeleteButton from "./components/statusDeleteButton";
 import CategorySelector, { categories } from "./components/categorySelector";
 import TableSelector, { TableType } from "./components/tableSelector";
 import StatusTable from "./components/statusTable";
+import { AuthContext } from "@/store/context/AuthContext";
 
 export interface Item {
   email: string;
@@ -33,6 +34,7 @@ const StatusModule = ({
   const [selectedCategory, setSelectedCategory] = useState(categories[0]);
   const [rows, setRows] = useState(documents.itemsMap[table].inventoryData);
   const [error, setError] = useState<string | null>(null);
+  const auth = useContext(AuthContext);
 
   useEffect(() => {
     const filteredRows = documents.itemsMap[table].inventoryData.filter((row: any) => {
@@ -50,7 +52,9 @@ const StatusModule = ({
     setError(null);
   }
 
-  const IsValidUser = documents.itemsMap[table].email === documents.currentUserEmail;
+  const IsValidUser =
+    auth.user?.isAdmin || documents.itemsMap[table].email === documents.currentUserEmail;
+
   const displayedAuthorName =
     documents.itemsMap[table].nickname ||
     documents.itemsMap[table].realname ||
@@ -69,6 +73,7 @@ const StatusModule = ({
 
         {IsValidUser && (
           <StatusDeleteButton
+          IsValidUser={IsValidUser}
             documentEmail={documents.itemsMap[table].email}
             currentUserEmail={documents.currentUserEmail}
             fetchDeleteDataPath={documents.fetchDeleteDataPath}
