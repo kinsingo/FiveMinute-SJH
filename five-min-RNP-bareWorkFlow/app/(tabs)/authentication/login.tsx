@@ -1,7 +1,8 @@
 import { useState, useContext } from "react";
 import ExternalLink from "@/components/ExternalLink";
-import { View, StyleSheet, ImageBackground,Alert } from "react-native";
-import { Card, TextInput, Button, Text, useTheme } from "react-native-paper";
+import { View, StyleSheet, ImageBackground, Alert } from "react-native";
+import { Card, TextInput, Button, Text, useTheme, Dialog, Portal } from "react-native-paper";
+
 import { AuthContext } from "@/store/context/AuthContext";
 import { useRouter } from "expo-router";
 import React from "react";
@@ -20,14 +21,37 @@ export default function SignInScreen() {
     subMessage: "",
   });
 
- 
+  const [visible, setVisible] = useState(false);
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
+  const handleDelete = async () => {
+    hideDialog();
+    try {
+      setLoading(true);
+      await auth.delete();
+      setActionMessage({
+        success: true,
+        message: "계정 삭제 성공",
+        subMessage: "",
+      });
+    } catch (error: any) {
+      setActionMessage({
+        success: false,
+        message: "계정 삭제 실패",
+        subMessage: error.message || "",
+      });
+    }
+    finally {
+      setLoading(false);
+      await auth.logout();
+    }
+  };
+
   const togglePasswordVisibility = () => {
     setShowPassword((prev) => !prev); // true <-> false 토글
   };
 
-  const handleSignIn = async () => {
-    // 로그인 상태에서 로그아웃
-    if (auth.isLogin) {
+  const logout = async () => {
       setLoading(true);
       const success = await auth.logout();
       if (success) {
@@ -44,6 +68,12 @@ export default function SignInScreen() {
         });
       }
       setLoading(false);
+    }
+
+  const handleSignIn = async () => {
+    // 로그인 상태에서 로그아웃
+    if (auth.isLogin) {
+      await logout();
       return;
     }
 
@@ -97,7 +127,6 @@ export default function SignInScreen() {
               text: "Cancel",
               style: "cancel",
             },
-         
           ],
           { cancelable: false }
         );
@@ -112,9 +141,7 @@ export default function SignInScreen() {
       setActionMessage({
         success: false,
         message: "오류 발생",
-        subMessage:
-          error.response?.data?.message ||
-          "서버와 통신 중 오류가 발생했습니다.",
+        subMessage: error.response?.data?.message || "서버와 통신 중 오류가 발생했습니다.",
       });
     }
     setLoading(false);
@@ -131,10 +158,7 @@ export default function SignInScreen() {
           <View style={styles.header}>
             <Text
               variant="headlineMedium"
-              style={[
-                styles.headerText,
-                { backgroundColor: theme.colors.primaryContainer },
-              ]}
+              style={[styles.headerText, { backgroundColor: theme.colors.primaryContainer }]}
             >
               5분 덮밥
             </Text>
@@ -146,9 +170,7 @@ export default function SignInScreen() {
                 style={[
                   styles.actionMessage,
                   {
-                    color: actionMessage.success
-                      ? theme.colors.primary
-                      : theme.colors.error,
+                    color: actionMessage.success ? theme.colors.primary : theme.colors.error,
                   },
                 ]}
               >
@@ -167,7 +189,7 @@ export default function SignInScreen() {
                   mode="outlined"
                   value={email.value}
                   onChangeText={(text) => setEmail({ ...email, value: text })}
-                  autoCapitalize="none"      // ✅ 자동 대문자 변환 방지
+                  autoCapitalize="none" // ✅ 자동 대문자 변환 방지
                   disabled={loading}
                   style={[
                     styles.input,
@@ -183,11 +205,9 @@ export default function SignInScreen() {
                 <TextInput
                   label="Password"
                   mode="outlined"
-                  autoCapitalize="none"      // ✅ 자동 대문자 변환 방지
+                  autoCapitalize="none" // ✅ 자동 대문자 변환 방지
                   value={password.value}
-                  onChangeText={(text) =>
-                    setPassword({ ...password, value: text })
-                  }
+                  onChangeText={(text) => setPassword({ ...password, value: text })}
                   disabled={loading}
                   style={[
                     styles.input,
@@ -211,10 +231,7 @@ export default function SignInScreen() {
 
             <Button
               onPress={handleSignIn}
-              style={[
-                styles.button,
-                { backgroundColor: theme.colors.primaryContainer },
-              ]}
+              style={{ backgroundColor: theme.colors.primaryContainer }}
               disabled={loading}
             >
               <Text variant="bodyLarge" style={{ fontWeight: "bold" }}>
@@ -244,6 +261,29 @@ export default function SignInScreen() {
                   여기서 재설정
                 </ExternalLink>
               </Text>
+            </View>
+          )}
+
+          {auth.isLogin && (
+            <View style={styles.footer}>
+              <View style={{ flexDirection: "row", alignItems: "center" }}>
+                <Text variant="bodyMedium">계정을 삭제하시겠습니까?</Text>
+                <Button mode="text" onPress={showDialog}>
+                  삭제하기
+                </Button>
+              </View>
+              <Portal>
+                <Dialog visible={visible} onDismiss={hideDialog}>
+                  <Dialog.Title>계정 삭제</Dialog.Title>
+                  <Dialog.Content>
+                    <Text variant="bodyMedium">정말로 삭제하시겠습니까?</Text>
+                  </Dialog.Content>
+                  <Dialog.Actions>
+                    <Button onPress={hideDialog}>아니요</Button>
+                    <Button onPress={handleDelete}>네</Button>
+                  </Dialog.Actions>
+                </Dialog>
+              </Portal>
             </View>
           )}
         </Card>
@@ -297,11 +337,7 @@ const styles = StyleSheet.create({
   input: {
     marginBottom: 16,
   },
-  button: {
-    marginTop: 16,
-  },
   footer: {
-    marginTop: 16,
     alignItems: "center",
   },
   link: {

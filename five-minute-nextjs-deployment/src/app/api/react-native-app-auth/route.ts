@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { isValidPassword } from "@/app/authentication/lib/util/validation";
-import { getPublicCollection,getConnectedPublicDB } from "@/MongoDB/db-manager";
+import { getPublicCollection, createPublicCollection, getConnectedPublicDB } from "@/MongoDB/db-manager";
 import jwt from "jsonwebtoken";
 
 interface LoginRequestBody {
@@ -44,6 +44,9 @@ export async function POST(req: Request) {
 
     // ✅ JWT 생성
     const token = generateToken(user);
+
+    // ✅ 출퇴근 데이터 컬렉션 생성 (없는 경우에만 생성)
+    await createPublicCollection(email + "_attendance");
 
     // 로그인 성공 시 사용자 데이터 반환
     return NextResponse.json({

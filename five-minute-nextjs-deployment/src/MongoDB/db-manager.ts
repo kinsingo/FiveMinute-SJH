@@ -44,10 +44,19 @@ async function getPublicCollection(collectionName: string) {
   return _publicDB.collection(collectionName);
 }
 
+
+async function createPublicCollection(collectionName: string) {
+  const _publicDB = await getConnectedPublicDB();
+  if (!_publicDB) {
+    throw new Error("Failed to connect to the database.");
+  }
+  await _publicDB.createCollection(collectionName);
+}
+
 enum InventoryCollectionName {
   bundang = "inventory-status-bundang",
   gangnam = "inventory-status-gangnam",
   sinlim = "inventory-status-sinlim",
 }
 
-export { getPublicCollection, getConnectedPublicDB, InventoryCollectionName };
+export { getPublicCollection, createPublicCollection, getConnectedPublicDB, InventoryCollectionName };

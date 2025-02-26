@@ -27,6 +27,7 @@ export interface UserInfo {
 interface AuthContextType {
   login: ({ email, password }: { email: string; password: string }) => Promise<any>;
   logout: () => Promise<boolean>;
+  delete: () => Promise<void>;
   getCurrentUserEmail: () => Promise<string | null>;
   getRecommendedUserName: () => string;
   getAccountInfo: (email: string) => Promise<any>;
@@ -40,6 +41,7 @@ interface AuthContextType {
 export const AuthContext = createContext<AuthContextType>({
   login: async ({ email, password }: { email: string; password: string }) => ({ success: false }),
   logout: async () => false,
+  delete: async () => {},
   getCurrentUserEmail: async (): Promise<string | null> => null,
   getRecommendedUserName: () => "",
   getAccountInfo: async (email: string) => null,
@@ -161,6 +163,29 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
     }
   };
 
+  // ✅ 계정 삭제 함수
+  const deleteAccount = async (): Promise<void> => {
+    try {
+      const token = await SecureStore.getItemAsync(TOKEN_KEY);
+      if(!token)
+        throw new Error("토큰이 존재하지 않습니다.");
+      const userEmail = await SecureStore.getItemAsync(EMAIL_KEY);
+      if (!userEmail) 
+        throw new Error("이메일이 존재하지 않습니다.");
+      const response = await axios.delete(AUTH_URL, {
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        data: { email: userEmail },
+      });
+      if (!response.data.success)
+        throw new Error("계정 삭제 실패:", response.data.message);
+    } catch (error: any) {
+      throw new Error("계정 삭제 요청 중 오류 발생:", error.message);
+    }
+  };
+
   // ✅ 저장된 이메일 가져오기
   const getCurrentUserEmail = async (): Promise<string | null> => {
     try {
@@ -187,6 +212,7 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
   const value = {
     login,
     logout,
+    delete: deleteAccount,
     getCurrentUserEmail,
     getRecommendedUserName,
     getAccountInfo,
