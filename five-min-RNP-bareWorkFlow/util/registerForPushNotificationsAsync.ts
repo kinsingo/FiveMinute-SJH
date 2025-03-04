@@ -3,6 +3,23 @@ import * as Device from "expo-device";
 import Constants from "expo-constants";
 import { Platform } from "react-native";
 import { Alert } from "react-native";
+import axios from "axios";
+
+export const PUSHTOKEN_URL = "https://www.5minbowl.com/api/react-native-app-pushtokens";
+
+// 백엔드 API에 푸시 토큰 저장
+async function sendPushTokenToServer(token: string) {
+  try {
+    const response = await axios.post(PUSHTOKEN_URL, { token });
+    if (response.status === 201) {
+      //console.log("Push token stored successfully!");
+    } else {
+      console.error("Failed to store push token:", response.data);
+    }
+  } catch (error) {
+    console.error("Error sending push token:", error);
+  }
+}
 
 export async function registerForPushNotificationsAsync() {
   if (Platform.OS === "android") {
@@ -26,9 +43,6 @@ export async function registerForPushNotificationsAsync() {
     }
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
-
-    console.log("projectId: ", projectId);
-
     if (!projectId) {
       Alert.alert("Project ID not found");
     }
@@ -38,7 +52,8 @@ export async function registerForPushNotificationsAsync() {
           projectId,
         })
       ).data;
-      console.log("pushTokenString:" + pushTokenString);
+      //console.log("pushTokenString:" + pushTokenString);
+      await sendPushTokenToServer(pushTokenString);
       return pushTokenString;
     } catch (e: unknown) {
       console.error(`${e}`);

@@ -37,13 +37,10 @@
 4) 댓글창 개선 많이 했음
 
 ## 250304
-1) Android/ios별 토큰 생성하는 로직 검증 완료
+1) Android/ios별 지시사항 업로드시 Push 하도록 구현 완료
 
 ## To-Do
-1) 사용자 정보 입력쪽 구축 (지점 선택하도록, Checkbox 로 여러개 선택 가능, 관련 담당자들에게 지시사항 신규 추가시 Push Notification 구축 예정)
--. Backend-API 에서 토큰 저장하는 로직 구현 및 App에 연동 필요
--. Backend-API 에서 저장된 모든 토큰 불러오는 로직 구현 및 App에 연동 필요
--. Backend-API 에서 토큰 삭제하는 로직도 구현 필요, 만약 App에서 Push 할때, 해당 토큰이 존재하지 않은것으로 판단되면(예를 들어 앱 재설치 혹은 삭제) 해당 토큰 지우는 로직 구현 필요 
+1) 더 필요한 기능 있는지 확인하고, 피드백 받아서 배포
 
 ## 중요[App]
 1) Firebase 의 Firestore(Database) 에서는 아래 Rule 적용하여, 해당 Database는 보안이 떨어짐 

@@ -10,7 +10,7 @@ import {
 import { AuthContext } from "@/store/context/AuthContext";
 import { getTimeStamp } from "@/util/time-manager";
 import { uploadImageToFirebase } from "@/components/todo/instruction-storage-mananger";
-import { useNotification } from "@/store/context/NotificationContext";
+import { PUSHTOKEN_URL } from "@/util/registerForPushNotificationsAsync";
 
 export default function SaveButton({
   title,
@@ -29,7 +29,6 @@ export default function SaveButton({
 }) {
   const router = useRouter();
   const auth = useContext(AuthContext);
-  const { expoPushToken, notification } = useNotification();
 
   // Firestore에 데이터 추가하는 함수
   const handleSaveInstruction = async () => {
@@ -57,29 +56,66 @@ export default function SaveButton({
         imageUrl: firebaseImageUrl || "",
       };
       await addInstruction({ Location, instruction: newInstruction as Instruction });
-      console.log("🔔 Notification: ", notification);
-      console.log("🔔 expoPushToken: ", expoPushToken);
-      if (expoPushToken) {
-        // ✅ 푸시 알림 전송
-        await fetch("https://exp.host/--/api/v2/push/send", {
-          method: "POST",
-          headers: {
-            Accept: "application/json",
-            "Accept-encoding": "gzip, deflate",
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            // ✅ 푸시 알림 전송
-            to: expoPushToken,
-            title: "새로운 지시사항이 등록되었습니다.",
-            body: `${newInstruction.title}`,
-            data: {
-              instruction: newInstruction,
-            },
-          }),
-        });
-      }
 
+      // ✅ 1. Next.js 백엔드에서 저장된 모든 토큰 가져오기
+      const response = await fetch(PUSHTOKEN_URL);
+      const tokens = await response.json(); // [{ token: "ExponentPushToken[xxx]" }, ...]
+
+      if (tokens.length > 0) {
+        // ✅ 2. 푸시 알림을 보낼 토큰 목록 준비
+        const invalidTokens: string[] = [];
+
+        //Promise.all을 사용하여 모든 푸시 알림 요청을 병렬로 보내기
+        await Promise.all(
+          tokens.map(async (tokenObj: any) => {
+            try {
+              const pushResponse = await fetch("https://exp.host/--/api/v2/push/send", {
+                method: "POST",
+                headers: {
+                  Accept: "application/json",
+                  "Accept-encoding": "gzip, deflate",
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                  to: tokenObj.token,
+                  title: "새로운 지시사항이 등록되었습니다.",
+                  body: `${newInstruction.title}`,
+                  data: {
+                    instruction: newInstruction,
+                  },
+                }),
+              });
+
+              const pushResult = await pushResponse.json();
+              if (pushResult.data?.status === "error") {
+                const errorType = pushResult.data?.details?.error || "UnknownError";
+                if (errorType === "DeviceNotRegistered") {
+                  console.warn(`⚠️ 장치가 등록 해제됨: ${tokenObj.token}`);
+                  invalidTokens.push(tokenObj.token); // ✅ 장치가 없으면 삭제 목록에 추가
+                } else {
+                  console.warn(
+                    `🚨 푸시 실패 (장치 문제 아님): ${tokenObj.token}, 이유: ${errorType}`
+                  );
+                }
+              }
+            } catch (error) {
+              console.error(`❌ 푸시 알림 전송 실패: ${tokenObj.token}`, error);
+            }
+          })
+        );
+
+        // ✅ 3. 유효하지 않은 토큰 삭제 요청
+        if (invalidTokens.length > 0) {
+          await fetch(PUSHTOKEN_URL, {
+            method: "DELETE",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({ tokens: invalidTokens }),
+          });
+          console.log("✅ Invalid tokens deleted:", invalidTokens);
+        }
+      }
       router.back(); // 저장 후 목록 화면으로 이동
     } catch (error) {
       Alert.alert("저장 실패", "지시사항 저장 중 오류가 발생했습니다.");
