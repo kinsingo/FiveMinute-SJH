@@ -1,0 +1,9 @@
+{
+  "extends": ["next/core-web-vitals", "next/typescript"],
+
+  //added by SJH
+  "rules": {
+    "@typescript-eslint/no-explicit-any": "off",// any 타입을 사용할 수 있습니다.
+    "@typescript-eslint/ban-ts-comment": "off" // @ts-ignore, @ts-expect-error 및 기타 @ts- 주석에 대해 경고나 오류를 전혀 표시하지 않습니다.
+  }
+}

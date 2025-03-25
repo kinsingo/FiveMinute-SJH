@@ -1,0 +1,22 @@
+# 환경 변수 파일
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# vercel
+.vercel

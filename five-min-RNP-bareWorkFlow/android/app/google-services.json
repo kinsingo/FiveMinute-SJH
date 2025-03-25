@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "87168456895",
+    "project_id": "fiveminutedonburi",
+    "storage_bucket": "fiveminutedonburi.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:87168456895:android:1b31ee957a5565dd558e0a",
+        "android_client_info": {
+          "package_name": "com.jonghyunshin.finveminutereactnativepaperapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRRwpETpwzLYlPUt_AT_gdvr2iID7y9UA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
