@@ -100,7 +100,20 @@ export default function ResultTable({ columns = [], rows = [{}] }: TableProps) {
       return template;
     });
 
-    return <TableRow key={rowKey}>{tableRow}</TableRow>;
+    return (
+      <TableRow
+        key={rowKey}
+        sx={{
+          backgroundColor: row.error
+            ? "#fee"
+            : row.warning
+            ? "#fff3e0"
+            : "inherit",
+        }}
+      >
+        {tableRow}
+      </TableRow>
+    );
   });
 
   return useMemo(
@@ -122,6 +135,6 @@ export default function ResultTable({ columns = [], rows = [{}] }: TableProps) {
         </MuiTable>
       </TableContainer>
     ),
-    [columns, rows]
+    [renderColumns, renderRows]
   );
 }

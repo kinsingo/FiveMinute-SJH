@@ -7,8 +7,7 @@ import { randomInt } from "crypto";
 import { isValidEmail } from "@/app/authentication/lib/util/validation";
 import { getPublicCollection } from "@/MongoDB/db-manager";
 
-async function sendVerificationMail(email:string, generatedCode: string)
-{
+async function sendVerificationMail(email: string, generatedCode: string) {
   const transporter = nodemailer.createTransport({
     service: "naver", // 원하는 이메일 서비스
     auth: {
@@ -17,7 +16,8 @@ async function sendVerificationMail(email:string, generatedCode: string)
     },
   });
 
-  const logoUrl = "https://raw.githubusercontent.com/kinsingo/Img_URL/main/Five-Min-Mail-Header.PNG";
+  const logoUrl =
+    "https://raw.githubusercontent.com/kinsingo/Img_URL/main/Five-Min-Mail-Header.PNG";
   //text는 HTML을 지원하지 않는 이메일 클라이언트를 위한 백업 역할을 합니다.
   //그러므로 이메일 전송 시, text와 html을 둘 다 제공하는 것이 가장 좋습니다
   const mailOptions = {
@@ -34,9 +34,9 @@ async function sendVerificationMail(email:string, generatedCode: string)
       <h3 style="text-align: center; color: #33F;"><strong>${generatedCode}</strong></h3>
     </div>
   `,
-  }
+  };
   await transporter.sendMail(mailOptions);
-} 
+}
 
 async function emailVerificationServerAction(
   //@ts-ignore
@@ -50,28 +50,30 @@ async function emailVerificationServerAction(
   const { isValid, message } = isValidEmail(authData.email as string);
   if (!isValid) {
     return {
-      email : "",
+      email: "",
       message: message,
       verificationCode: "",
       isValid: false,
-    }
+    };
   }
 
   const collection = await getPublicCollection("users");
-  const existingUser = await collection.findOne({ email: authData.email as string });
+  const existingUser = await collection.findOne({
+    email: authData.email as string,
+  });
   if (existingUser) {
     return {
-      email : "",
+      email: "",
       message: "Email exists already",
       verificationCode: "",
       isValid: false,
-    }
+    };
   }
 
   const generatedCode = randomInt(0, 1_000_000).toString().padStart(6, "0"); //(0~999999) 랜덤 숫자에서 만약 6자리가 안되면 앞에 0을 채움
   await sendVerificationMail(authData.email as string, generatedCode);
   return {
-    email : authData.email as string,
+    email: authData.email as string,
     message: "A verification code has been sent to your email.",
     verificationCode: generatedCode,
     isValid: true,
@@ -110,6 +112,7 @@ async function signUpServerAction(
     email: formData.get("email"),
     password: formData.get("password"),
     confirmPassword: formData.get("confirmPassword"),
+    collectionName: "users",
   };
 
   try {
@@ -124,4 +127,8 @@ async function signUpServerAction(
   redirect("/authentication/login");
 }
 
-export { emailVerificationServerAction, codeVerificationServerAction, signUpServerAction };
+export {
+  emailVerificationServerAction,
+  codeVerificationServerAction,
+  signUpServerAction,
+};

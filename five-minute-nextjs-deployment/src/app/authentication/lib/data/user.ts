@@ -8,9 +8,13 @@ async function getHashedPassword(password: string) {
 }
 
 //public
-async function addUser(email: string, password: string) {
+async function addUser(
+  email: string,
+  password: string,
+  collectionName: string
+) {
   try {
-    const collection = await getPublicCollection("users");
+    const collection = await getPublicCollection(collectionName);
     await collection.insertOne({
       email: email,
       password: await getHashedPassword(password),
@@ -20,24 +24,34 @@ async function addUser(email: string, password: string) {
       isDeveloper: false, //팀원들
     });
   } catch (error: any) {
-    throw new Error(`Could not add new user - ${error.message}`);
+    throw new Error(`새로운 사용자를 추가할 수 없습니다 - ${error.message}`);
   }
 }
 
-async function modifyPassword(email: string, newPassword: string) {
+async function modifyPassword(
+  email: string,
+  newPassword: string,
+  collectionName: string
+) {
   try {
-    const collection = await getPublicCollection("users");
+    const collection = await getPublicCollection(collectionName);
     await collection.updateOne(
       { email }, // 업데이트 조건: 이메일이 일치하는 사용자
       { $set: { password: await getHashedPassword(newPassword) } } // 변경할 필드: 새로운 비밀번호로 갱신
     );
   } catch (error: any) {
-    throw new Error(`Could not update the user's password - ${error.message}`);
+    throw new Error(
+      `사용자의 패스워드를 수정 할 수 없습니다 - ${error.message}`
+    );
   }
 }
 
-async function findTokenValidUser(email: string, token: string) {
-  const collection = await getPublicCollection("users");
+async function findTokenValidUser(
+  email: string,
+  token: string,
+  collectionName: string
+) {
+  const collection = await getPublicCollection(collectionName);
   const user = await collection.findOne({
     email,
     resetToken: getPasswordResetToken(token),
@@ -45,26 +59,16 @@ async function findTokenValidUser(email: string, token: string) {
   });
 
   if (!user) {
-    throw new Error(`Token is invalid or expired.`);
+    throw new Error(`토큰이 유효하지 않거나 만료되었습니다.`);
   }
   return user;
 }
 
-async function isAdmin(email: string) {
-  const user = await findUserByEmail(email);
-  return user.isAdmin;
-}
-
-async function isAdminOrDeveloper(email: string) {
-  const user = await findUserByEmail(email);
-  return user.isAdmin || user.isDeveloper;
-}
-
-async function findUserByEmail(email: string) {
-  const collection = await getPublicCollection("users");
+async function findUserByEmail(email: string, collectionName: string) {
+  const collection = await getPublicCollection(collectionName);
   const user = await collection.findOne({ email });
   if (!user) {
-    throw new Error(`Could not find user for email ${email}`);
+    throw new Error(`${email} 에 해당하는 사용자를 찾을 수 없습니다.`);
   }
   return user;
 }
@@ -72,10 +76,11 @@ async function findUserByEmail(email: string) {
 async function saveResetToken(
   email: string,
   token: string | null,
-  expires: Date | null
+  expires: Date | null,
+  collectionName: string
 ) {
   try {
-    const collection = await getPublicCollection("users");
+    const collection = await getPublicCollection(collectionName);
     await collection.updateOne(
       { email }, // 업데이트 조건: 이메일이 일치하는 사용자
       {
@@ -86,7 +91,7 @@ async function saveResetToken(
       }
     );
   } catch (error: any) {
-    throw new Error(`Could not update the user's password - ${error.message}`);
+    throw new Error(`사용자의 비밀번호를 업데이트 할 수 없습니다 - ${error.message}`);
   }
 }
 
@@ -96,6 +101,4 @@ export {
   findUserByEmail,
   saveResetToken,
   findTokenValidUser,
-  isAdmin,
-  isAdminOrDeveloper,
 };

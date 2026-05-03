@@ -14,12 +14,14 @@ import {
 } from "date-fns";
 import { getKoreaDate } from "@/utils/timeManager";
 import { AttendanceData } from "./AttendanceTable";
+import { Box, TextField } from "@mui/material";
 
 export interface SummaryData {
   period: string;
   startDate: string;
   endDate: string;
   workHours: string;
+  급여: string;
 }
 
 export default function AttendanceSummary({
@@ -29,15 +31,16 @@ export default function AttendanceSummary({
 }) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [summaryData, setSummaryData] = useState<SummaryData[]>([]);
-
+  const [hourlyWage, setHourlyWage] = useState<number>(10000);
   useEffect(() => {
     processWorkHoursSummary(attendanceData);
-  }, [attendanceData, selectedDate]);
+  }, [attendanceData, selectedDate, hourlyWage]);
 
   const columns: Column[] = [
     { name: "기간", align: "center" },
     { name: "날짜", align: "center" },
     { name: "근무 시간", align: "center" },
+    { name: "급여", align: "center" },
   ];
 
   const rows: Row[] =
@@ -47,6 +50,7 @@ export default function AttendanceSummary({
         ? `${data.startDate} ~ ${data.endDate}`
         : data.startDate || "N/A",
       "근무 시간": data.workHours || "0",
+      급여: data.급여 || "0",
       hasBorder: true,
     })) || [];
 
@@ -64,38 +68,58 @@ export default function AttendanceSummary({
     const monthStart = getKoreaDate(startOfMonth(endDate));
     const monthEnd = getKoreaDate(endOfMonth(endDate));
 
+    const dailyWorkHours = data
+      .filter((d) => d.date === todayStr)
+      .reduce((sum, d) => sum + d.workHours, 0)
+      .toFixed(2);
+
+    const yesterdayWorkHours = data
+      .filter((d) => d.date === yesterdayStr)
+      .reduce((sum, d) => sum + d.workHours, 0)
+      .toFixed(2);
+
+    const lastWeekWorkHours = data
+      .filter((d) => d.date >= weekStart && d.date <= weekEnd)
+      .reduce((sum, d) => sum + d.workHours, 0)
+      .toFixed(2);
+
+    const MonthlyWorkHours = data
+      .filter((d) => d.date >= monthStart && d.date <= monthEnd)
+      .reduce((sum, d) => sum + d.workHours, 0)
+      .toFixed(2);
+
+    function getSalaryInfo(workHours: string) {
+      return (parseFloat(workHours) * hourlyWage).toFixed(0) || "N/A";
+    }
+
     const summary: SummaryData[] = [
       {
         period: "당일",
         startDate: todayStr,
         endDate: "",
-        workHours: data
-          .filter((d) => d.date === todayStr)
-          .reduce((sum, d) => sum + d.workHours, 0).toFixed(2),
+        workHours: dailyWorkHours,
+        급여: getSalaryInfo(dailyWorkHours),
       },
       {
         period: "하루전",
         startDate: yesterdayStr,
         endDate: "",
-        workHours: data
-          .filter((d) => d.date === yesterdayStr)
-          .reduce((sum, d) => sum + d.workHours, 0).toFixed(2),
+        workHours: yesterdayWorkHours,
+        급여: getSalaryInfo(yesterdayWorkHours),
       },
       {
         period: "해당주(월~일)",
         startDate: weekStart,
         endDate: weekEnd,
-        workHours: data
-          .filter((d) => d.date >= weekStart && d.date <= weekEnd)
-          .reduce((sum, d) => sum + d.workHours, 0).toFixed(2),
+        workHours: lastWeekWorkHours,
+        급여: getSalaryInfo(lastWeekWorkHours),
       },
       {
         period: "해당달",
         startDate: monthStart,
         endDate: monthEnd,
-        workHours: data
-          .filter((d) => d.date >= monthStart && d.date <= monthEnd)
-          .reduce((sum, d) => sum + d.workHours, 0).toFixed(2),
+        workHours: MonthlyWorkHours,
+        급여: getSalaryInfo(MonthlyWorkHours),
       },
     ];
     setSummaryData(summary);
@@ -103,23 +127,32 @@ export default function AttendanceSummary({
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <DatePicker
-        label="조회할 년/월 선택"
-        value={selectedDate}
-        onChange={(newDate) => {
-          if (newDate) {
-            setSelectedDate(newDate);
-          }
-        }}
-        slotProps={{
-          textField: {
-            fullWidth: false,
-            InputLabelProps: {
-              shrink: true,
+      <Box flexDirection="row" display="flex">
+        <DatePicker
+          label="조회할 년/월 선택"
+          value={selectedDate}
+          onChange={(newDate) => {
+            if (newDate) {
+              setSelectedDate(newDate);
+            }
+          }}
+          slotProps={{
+            textField: {
+              fullWidth: false,
+              InputLabelProps: {
+                shrink: true,
+              },
             },
-          },
-        }}
-      />
+          }}
+        />
+        <Box sx={{ ml: 2 }} />
+        <TextField
+          value={hourlyWage}
+          onChange={(event) => setHourlyWage(Number(event.target.value))}
+          label="시급"
+          variant="outlined"
+        />
+      </Box>
       <ResultTable columns={columns} rows={rows} />
     </LocalizationProvider>
   );

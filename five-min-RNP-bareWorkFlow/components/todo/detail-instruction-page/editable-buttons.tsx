@@ -44,7 +44,7 @@ export default function EditableButtons({
   // Firestore에 수정된 데이터 업데이트
   const handleUpdateInstruction = async () => {
     if (!id) {
-      Alert.alert("지시사항 ID가 없습니다.");
+      Alert.alert("소통 정보를 찾을 수 없습니다.");
       return;
     }
     await updateInstruction({
@@ -57,11 +57,11 @@ export default function EditableButtons({
 
   const handleDeleteInstruction = async () => {
     if (!id) {
-      Alert.alert("지시사항 ID가 없습니다.");
+      Alert.alert("소통 정보를 찾을 수 없습니다.");
       return;
     }
 
-    Alert.alert("삭제 확인", "정말 이 지시사항을 삭제하시겠습니까?", [
+    Alert.alert("삭제 확인", "정말 이 소통 내용을 삭제하시겠습니까?", [
       { text: "취소", style: "cancel" },
       {
         text: "삭제",
@@ -100,7 +100,7 @@ export default function EditableButtons({
             router.back();
           } catch (error) {
             console.error("🔥 삭제 중 오류 발생:", error);
-            Alert.alert("삭제 실패", "지시사항 삭제 중 오류가 발생했습니다.");
+            Alert.alert("삭제 실패", "내용 삭제 중 오류가 발생했습니다.");
           }
         },
       },
@@ -114,7 +114,7 @@ export default function EditableButtons({
         (isEditing ? (
           <View style={styles.buttonContainer}>
             <Button mode="contained" onPress={() => setDetails("")} disabled={disabled}>
-              세부사항 비우기
+              내용 비우기
             </Button>
             <Button mode="outlined" onPress={handleUpdateInstruction} disabled={disabled}>
               수정 완료
@@ -123,10 +123,10 @@ export default function EditableButtons({
         ) : (
           <View style={styles.buttonContainer}>
             <Button mode="contained" onPress={() => setIsEditing(true)} disabled={disabled}>
-              세부사항 수정하기
+              내용 수정하기
             </Button>
             <Button mode="outlined" onPress={handleDeleteInstruction} disabled={disabled}>
-              지시사항 삭제하기
+              내용 삭제하기
             </Button>
           </View>
         ))}

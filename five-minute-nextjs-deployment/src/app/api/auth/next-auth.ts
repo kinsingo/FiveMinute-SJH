@@ -20,7 +20,11 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         };
 
         try {
-          const user = await login({ email, password });
+          const user = await login({
+            email,
+            password,
+            collectionName: "users",
+          });
           return user as User; // 성공 시 사용자 객체를 반환하여 세션에 저장
         } catch {
           return null; // 인증 실패 시 null 반환 (CredentialsSignin 에러 발생), throw Error 말고 반드시 null 로
@@ -35,7 +39,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   },
   trustHost: true,
 
-  //Session 을 30일로 
+  //Session 을 30일로
   session: {
     strategy: "jwt", // 세션 전략 설정
     maxAge: 30 * 24 * 60 * 60, // 세션 최대 유지 기간: 30일 (초 단위)

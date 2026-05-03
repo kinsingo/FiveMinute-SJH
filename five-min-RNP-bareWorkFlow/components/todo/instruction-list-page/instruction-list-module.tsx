@@ -53,13 +53,13 @@ export default function InstructionListModule({Location}:{Location:LocationProp}
             <Card style={{ marginBottom: 12 }}>
               <Card.Content>
                 <Text variant="titleMedium" style={{ fontWeight: "bold" }}>
-                  제목 : {item.title}
+                  주제 : {item.title}
                 </Text>
                 <Text variant="titleSmall">
-                  작성자 : {item.author}
+                  남긴 사람 : {item.author}
                 </Text>
                 <Text variant="titleSmall">
-                  작성시간 : {item.timestamp}
+                  남긴 시간 : {item.timestamp}
                 </Text>
               </Card.Content>
             </Card>
@@ -71,7 +71,7 @@ export default function InstructionListModule({Location}:{Location:LocationProp}
         onPress={() => router.push(`/todo/${Location}/new-instruction` as any)}
         style={{ margin: 16 }}
       >
-        새 지시사항 추가
+        새 소통 남기기
       </Button>
     </View>
   );

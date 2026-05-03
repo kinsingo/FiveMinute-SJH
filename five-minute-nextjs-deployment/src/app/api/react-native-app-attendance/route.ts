@@ -1,7 +1,37 @@
 import { NextResponse } from "next/server";
 import { getPublicCollection } from "@/MongoDB/db-manager";
 import { getKoreaTodayDate } from "@/utils/timeManager";
+import { calculateWorkHours } from "@/app/attendance/components/util";
+import jwt from "jsonwebtoken";
 
+function getAdminFromRequest(req: Request) {
+  const authHeader = req.headers.get("Authorization");
+
+  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+    throw new Error("UNAUTHORIZED");
+  }
+
+  const token = authHeader.split(" ")[1];
+  let decoded: {
+    email: string;
+    isAdmin?: boolean;
+  };
+
+  try {
+    decoded = jwt.verify(token, process.env.JWT_TOKEN_SECRET as string) as {
+      email: string;
+      isAdmin?: boolean;
+    };
+  } catch {
+    throw new Error("UNAUTHORIZED");
+  }
+
+  if (!decoded.isAdmin) {
+    throw new Error("FORBIDDEN");
+  }
+
+  return decoded;
+}
 
 //Sign-In
 export async function POST(req: Request) {
@@ -61,6 +91,37 @@ export async function POST(req: Request) {
   }
 }
 
+// 출퇴근 데이터 수정 (PATCH), WAS에서 사용, isAdmin 유저만 사용 가능한 옵션임
+export async function PATCH(req: Request) {
+  try {
+    const { email, date, field, values } = await req.json(); // field: 'checkIn' | 'checkOut'
+    const collection = await getPublicCollection(email + "_attendance");
+    const attendance = await collection.findOne({ email, date });
+    if (!attendance) {
+      return NextResponse.json(
+        { success: false, message: "데이터 없음" },
+        { status: 404 },
+      );
+    }
+
+    const updateFields = {
+      [field]: values,
+    };
+    await collection.updateOne({ email, date }, { $set: updateFields });
+    const checkIn = field === "checkIn" ? values : attendance.checkIn;
+    const checkOut = field === "checkOut" ? values : attendance.checkOut;
+    const workHours = calculateWorkHours(checkIn, checkOut);
+    await collection.updateOne({ email, date }, { $set: { workHours } });
+    return NextResponse.json({ success: true, workHours });
+  } catch (err) {
+    console.error("PATCH attendance edit error:", err);
+    return NextResponse.json(
+      { success: false, message: "서버 오류" },
+      { status: 500 },
+    );
+  }
+}
+
 // ✅ 로그인 여부 확인 (GET)
 export async function GET(req: Request) {
   try {
@@ -70,7 +131,7 @@ export async function GET(req: Request) {
     if (!email) {
       return NextResponse.json(
         { message: "이메일을 전달해주세요." },
-        { status: 400 }
+        { status: 400 },
       );
     }
 
@@ -88,21 +149,78 @@ export async function GET(req: Request) {
         checkInLocation: attendance.checkInLocation,
         checkOutLocation: attendance.checkOutLocation,
       },
-      { status: 200 }
+      { status: 200 },
     );
   } catch (error) {
     console.error("Error fetching previous data:", error);
     return NextResponse.json(
       { message: "Failed to fetch data" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
+export async function DELETE(req: Request) {
+  try {
+    getAdminFromRequest(req);
 
+    const { beforeDate } = await req.json();
+    if (typeof beforeDate !== "string") {
+      return NextResponse.json(
+        { success: false, message: "삭제 조건이 올바르지 않습니다." },
+        { status: 400 },
+      );
+    }
+
+    const usersCollection = await getPublicCollection("users");
+    const users = await usersCollection
+      .find({}, { projection: { email: 1 } })
+      .toArray();
+    let deletedDocumentCount = 0;
+
+    for (const user of users) {
+      if (typeof user.email !== "string" || user.email.length === 0) {
+        continue;
+      }
+
+      const attendanceCollection = await getPublicCollection(
+        `${user.email}_attendance`,
+      );
+      const result = await attendanceCollection.deleteMany({
+        date: { $lt: beforeDate },
+      });
+      deletedDocumentCount += result.deletedCount;
+    }
+
+    return NextResponse.json({
+      success: true,
+      deletedCount: deletedDocumentCount,
+      deletedDocumentCount,
+    });
+  } catch (error: any) {
+    if (error instanceof Error && error.message === "UNAUTHORIZED") {
+      return NextResponse.json(
+        { success: false, message: "인증 토큰이 없습니다." },
+        { status: 401 },
+      );
+    }
+
+    if (error instanceof Error && error.message === "FORBIDDEN") {
+      return NextResponse.json(
+        { success: false, message: "관리자만 사용할 수 있습니다." },
+        { status: 403 },
+      );
+    }
+
+    console.error("DELETE attendance cleanup error:", error);
+    return NextResponse.json(
+      { success: false, message: "근태 정리 중 서버 오류가 발생했습니다." },
+      { status: 500 },
+    );
+  }
+}
 
 import { ObjectId } from "mongodb";
-
 function getInitialData({ email, date }: { email: string; date: string }) {
   return {
     _id: new ObjectId(),
@@ -115,30 +233,4 @@ function getInitialData({ email, date }: { email: string; date: string }) {
     status: "", // 기본값
     workHours: 0, // 기본값
   };
-}
-
-function calculateWorkHours(checkIn: string[], checkOut: string[]): number {
-  let totalSeconds = 0;
-
-  for (let i = 0; i < checkIn.length; i++) {
-    if (!checkIn[i] || !checkOut[i]) continue; // 빈 값이면 건너뜀
-
-    const checkInParts = checkIn[i].split(":").map((num) => parseInt(num, 10));
-    const checkOutParts = checkOut[i]
-      .split(":")
-      .map((num) => parseInt(num, 10));
-
-    if (checkInParts.length !== 3 || checkOutParts.length !== 3) continue; // 형식이 맞지 않으면 무시
-
-    const [inHour, inMinute, inSecond] = checkInParts;
-    const [outHour, outMinute, outSecond] = checkOutParts;
-
-    // ✅ 총 초 단위로 변환하여 차이 계산
-    const checkInTotalSeconds = inHour * 3600 + inMinute * 60 + inSecond;
-    const checkOutTotalSeconds = outHour * 3600 + outMinute * 60 + outSecond;
-
-    totalSeconds += checkOutTotalSeconds - checkInTotalSeconds;
-  }
-
-  return totalSeconds / 3600; // ✅ 초 → 시간 변환
 }

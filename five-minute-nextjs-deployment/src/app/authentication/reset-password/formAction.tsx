@@ -11,7 +11,8 @@ export default async function resetPasswordServerAction(
     email: formData.get("email"),
     token: formData.get("token"), 
     newPassword: formData.get("newPassword"),
-    confirmNewPassword : formData.get("confirmNewPassword")
+    confirmNewPassword : formData.get("confirmNewPassword"),
+    collectionName: "users",
   };
 
   try {

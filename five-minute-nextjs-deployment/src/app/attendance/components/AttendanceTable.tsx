@@ -1,12 +1,19 @@
-import ResultTable, { Column, Row } from "@/components/resultTable";
+import ResultTable from "@/components/resultTable";
 import * as React from "react";
 import { useState, useEffect } from "react";
 import { format } from "date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import { Alert, Box } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
-import { useMediaQuery } from "@mui/material";
+import { User } from "./DashBoard"; // User 타입을 가져옵니다.
+import { calculateWorkHours } from "./util";
+import {
+  getAttendanceRows,
+  getAttendanceColumns,
+} from "./AttendanceTable/AttendanceData";
+import AttendanceAlert from "./AttendanceTable/AttendanceAlert";
+import AttendanceTableFilter from "./AttendanceTable/AttendanceTableFilter";
+import EditTimeDialog from "./AttendanceTable/EditTimeDialog";
 
 export interface AttendanceData {
   email: string;
@@ -18,15 +25,33 @@ export interface AttendanceData {
 
 export default function AttendanceTable({
   attendanceData,
+  users,
+  setIsError,
+  setMessage,
+  login_email,
 }: {
   attendanceData: AttendanceData[];
+  users: User[];
+  setIsError: (isError: boolean) => void;
+  setMessage: (message: string) => void;
+  login_email: string;
 }) {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [hourlyWage, setHourlyWage] = useState<number>(10000);
   const formatDate = (date: Date | null) =>
     date ? format(date, "yyyy-MM-dd") : null;
-  const isSmallScreen = useMediaQuery("(max-width:768px)");
+  const [editableData, setEditableData] = useState<AttendanceData[]>([]);
+  const [editDialogOpen, setEditDialogOpen] = useState(false);
+  const [editTarget, setEditTarget] = useState<{
+    date: string;
+    field: "checkIn" | "checkOut";
+    value: string;
+  } | null>(null);
+  const isAdmin = users.some(
+    (user) => user.email === login_email && user.isAdmin
+  );
 
   // 📌 날짜 유효성 검사 (endDate가 startDate보다 빠를 경우 경고)
   useEffect(() => {
@@ -45,63 +70,86 @@ export default function AttendanceTable({
     return (!start || dataDate >= start) && (!end || dataDate <= end);
   });
 
-  const columns: Column[] = isSmallScreen? [
-    { name: "날짜", align: "center" },
-    { name: "근무 시간", align: "center" },
-  ]: [
-    { name: "날짜", align: "center" },
-    { name: "출근 시간", align: "center" },
-    { name: "퇴근 시간", align: "center" },
-    { name: "근무 시간", align: "center" },
-  ];
+  useEffect(() => {
+    if (editableData.length === 0 && filteredData.length > 0) {
+      setEditableData(filteredData);
+    }
+  }, [filteredData]);
 
-  const rows: Row[] = isSmallScreen?
-  filteredData.map((data: any) => ({
-    날짜: data.date || "N/A",
-    "근무 시간": data.workHours.toFixed(2) || "N/A",
-    hasBorder: true,
-  })) || [] :
-  filteredData.map((data: any) => ({
-    날짜: data.date || "N/A",
-    "출근 시간": data.checkIn.join(", ") || "N/A",
-    "퇴근 시간": data.checkOut.join(", ") || "N/A",
-    "근무 시간": data.workHours.toFixed(2) || "N/A",
-    hasBorder: true,
-  })) || []
+  const handleEdit = async (
+    date: string,
+    field: "checkIn" | "checkOut",
+    newValue: string[]
+  ) => {
+    try {
+      const selectedUser = users.find(
+        (user) => user.email === attendanceData[0]?.email
+      );
+      const response = await fetch("/api/react-native-app-attendance", {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: selectedUser?.email,
+          date,
+          field,
+          values: newValue,
+        }),
+      });
+      if (response.ok) {
+        setEditableData((prev) =>
+          prev.map((entry) => {
+            if (entry.date !== date) return entry;
+            const updated = { ...entry, [field]: newValue };
+            updated.workHours = calculateWorkHours(
+              updated.checkIn,
+              updated.checkOut
+            );
+            return updated;
+          })
+        );
+        alert("✅ 데이터 수정 성공");
+      } else {
+        setMessage(`⚠️ 데이터 수정 실패: 알 수 없는 오류`);
+        setIsError(true);
+      }
+    } catch (error: any) {
+      setMessage(`⚠️ ${error.message}`);
+      setIsError(true);
+    }
+  };
+
+  const columns = getAttendanceColumns();
+  const rows = getAttendanceRows({
+    editableData,
+    isAdmin,
+    hourlyWage,
+    filteredData,
+    setEditDialogOpen,
+    setEditTarget,
+  });
 
   return (
     <LocalizationProvider dateAdapter={AdapterDateFns}>
-      <Box flexDirection="row" display="flex">
-        <DatePicker
-          label="시작 날짜"
-          value={startDate}
-          onChange={setStartDate}
-          slotProps={{
-            textField: {
-              fullWidth: false,
-              InputLabelProps: {
-                shrink: true,
-              },
-            },
-          }}
-        />
-        <Box sx={{ ml: 2 }}/>
-        <DatePicker
-          label="종료 날짜"
-          value={endDate}
-          onChange={setEndDate}
-          slotProps={{
-            textField: {
-              fullWidth: false,
-              InputLabelProps: {
-                shrink: true,
-              },
-            },
-          }}
-        />
+      <AttendanceTableFilter
+        startDate={startDate}
+        endDate={endDate}
+        setStartDate={setStartDate}
+        setEndDate={setEndDate}
+        hourlyWage={hourlyWage}
+        setHourlyWage={setHourlyWage}
+      />
+      <Box mt={2} mb={1}>
+        <AttendanceAlert />
       </Box>
       {error && <Alert severity="warning">{error}</Alert>}
       <ResultTable columns={columns} rows={rows} />
+      <EditTimeDialog
+        editDialogOpen={editDialogOpen}
+        setEditDialogOpen={setEditDialogOpen}
+        editTarget={editTarget}
+        setEditTarget={setEditTarget}
+        handleEdit={handleEdit}
+      />
     </LocalizationProvider>
   );
 }

@@ -32,8 +32,8 @@ export interface CommentProps {
   commentImageUrl: string;
 }
 
-export type LocationProp = "Bundang" | "Gangnam" | "Sinlim";
-export type koreanPlaceName = "강남점" | "수내점" | "관악점";
+export type LocationProp = "Bundang" | "Gangnam";
+export type koreanPlaceName = "강남점" | "수내점";
 
 export function getkoreanPlaceName(Location: LocationProp) :koreanPlaceName{
   switch (Location) {
@@ -41,9 +41,7 @@ export function getkoreanPlaceName(Location: LocationProp) :koreanPlaceName{
       return "수내점";
     case "Gangnam":
       return "강남점";
-    case "Sinlim":
-      return "관악점";
-  }
+  } 
 };
 
 

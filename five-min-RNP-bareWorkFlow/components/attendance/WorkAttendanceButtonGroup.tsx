@@ -19,8 +19,6 @@ function getLocationName(location: validIbeaconE7Name) {
       return "강남점";
     case "5minSN":
       return "수내점";
-    case "5minSL":
-      return "관악점";
     default:
       return `${location}(오류)`;
   }

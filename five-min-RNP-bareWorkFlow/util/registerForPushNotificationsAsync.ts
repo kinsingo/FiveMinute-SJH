@@ -5,7 +5,7 @@ import { Platform } from "react-native";
 import { Alert } from "react-native";
 import axios from "axios";
 
-export const PUSHTOKEN_URL = "https://www.5minbowl.com/api/react-native-app-pushtokens";
+const PUSHTOKEN_URL = "https://www.5minbowl.com/api/react-native-app-pushtokens";
 
 // 백엔드 API에 푸시 토큰 저장
 async function sendPushTokenToServer(token: string) {
@@ -40,11 +40,13 @@ export async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       Alert.alert("Permission not granted to get push token for push notification!");
+      return null;
     }
     const projectId =
       Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
     if (!projectId) {
       Alert.alert("Project ID not found");
+      return null;
     }
     try {
       const pushTokenString = (
@@ -57,8 +59,10 @@ export async function registerForPushNotificationsAsync() {
       return pushTokenString;
     } catch (e: unknown) {
       console.error(`${e}`);
+      return null;
     }
   } else {
     Alert.alert("Must use physical device for push notifications");
+    return null;
   }
 }

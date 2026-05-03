@@ -1,7 +1,6 @@
-import { createContext, useState, useEffect, useMemo } from "react";
+import { createContext, useState, useEffect } from "react";
 import axios from "axios";
 import * as SecureStore from "expo-secure-store";
-import { scheduleDailyInventoryNotification } from "@/util/dailyNotificationAsync";
 
 const AUTH_URL = "https://www.5minbowl.com/api/react-native-app-auth"; // Next.js Auth API 경로
 export const ACCOUNT_INFO_URL = "https://www.5minbowl.com/api/react-native-app-account"; // Next.js Auth API 경로
@@ -115,13 +114,6 @@ export default function AuthContextProvider({ children }: { children: ReactNode 
       );
     }
   }, [authToken]);
-
-  const userPosition = useMemo(() => userInfo?.position, [userInfo]);
-  useEffect(() => {
-    if (userPosition) {
-      scheduleDailyInventoryNotification(userPosition);
-    }
-  }, [userPosition]);
 
   async function getAccountInfo(email: string) {
     const accountInfoResponse = await axios.get(ACCOUNT_INFO_URL, {

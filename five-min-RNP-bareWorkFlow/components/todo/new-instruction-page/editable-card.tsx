@@ -28,23 +28,23 @@ export default function EditableCard({
     <Card>
       <Card.Content>
         <TextInput
-          label="제목"
+          label="주제"
           value={title}
           onChangeText={setTitle}
           mode="outlined"
           style={{ marginBottom: 10 }}
-          placeholder="제목을 입력하세요."
+          placeholder="주제를 입력하세요."
           disabled={IsSaving}
         />
         <TextInput
-          label="세부사항"
+          label="내용"
           value={details}
           onChangeText={setDetails}
           mode="outlined"
           multiline
           numberOfLines={7}
           style={{ marginBottom: 10 }}
-          placeholder="세부사항을 입력하세요."
+          placeholder="내용을 입력하세요."
           disabled={IsSaving}
         />
         <View
@@ -69,7 +69,7 @@ export default function EditableCard({
               resizeMode="stretch"
             />
           ) : (
-            <Text>필요시 이미지를 업로드 하세요</Text>
+            <Text>필요하면 이미지를 함께 올려주세요</Text>
           )}
         </View>
         <ImageUploadButtons setImageUrl={setImageUrl} IsSaving={IsSaving} />

@@ -2,8 +2,17 @@ import React, { createContext, useContext, useState, useEffect, useRef, ReactNod
 import * as Notifications from "expo-notifications";
 import { EventSubscription } from "expo-notifications";
 import { registerForPushNotificationsAsync } from "@/util/registerForPushNotificationsAsync";
+import { scheduleDailyInventoryNotification } from "@/util/dailyNotificationAsync";
 import { Alert } from "react-native";
 import { useRouter } from "expo-router";
+
+Notifications.setNotificationHandler({
+  handleNotification: async () => ({
+    shouldShowAlert: true,
+    shouldPlaySound: true,
+    shouldSetBadge: false,
+  }),
+});
 
 interface NotificationContextType {
   expoPushToken: string | null;
@@ -32,12 +41,22 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
   const router = useRouter();
 
   useEffect(() => {
-    registerForPushNotificationsAsync().then(
-      (token) => setExpoPushToken(token as string),
-      (error) => {
-        error && Alert.alert(`${error}`);
+    const initializeNotifications = async () => {
+      try {
+        const token = await registerForPushNotificationsAsync();
+        if (typeof token === "string") {
+          setExpoPushToken(token);
+        }
+
+        await scheduleDailyInventoryNotification();
+      } catch (error) {
+        if (error) {
+          Alert.alert(`${error}`);
+        }
       }
-    );
+    };
+
+    initializeNotifications();
 
     notificationListener.current = Notifications.addNotificationReceivedListener((notification) => {
       console.log("🔔 Notification Received: ", notification);
@@ -48,9 +67,9 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
       console.log(
         "🔔 Notification Response: ",
         JSON.stringify(response, null, 2),
-        JSON.stringify(response.notification.request.content.data, null, 2)
+        JSON.stringify(response.notification.request.content.data, null, 2),
       );
-      // instruction 일 경우, 푸시 알림을 클릭하면 해당 Location(Sinlim, Gangnam, Bundang) detail-instruction 페이지로 이동
+      // instruction 일 경우, 푸시 알림을 클릭하면 해당 Location(Gangnam, Bundang) detail-instruction 페이지로 이동
       const data = response.notification.request.content.data;
       if (data?.instruction) {
         router.replace(data.redirectURL);
@@ -68,7 +87,7 @@ export const NotificationProvider: React.FC<NotificationProviderProps> = ({ chil
         Notifications.removeNotificationSubscription(responseListener.current);
       }
     };
-  }, []);
+  }, [router]);
 
   return (
     <NotificationContext.Provider value={{ expoPushToken, notification }}>

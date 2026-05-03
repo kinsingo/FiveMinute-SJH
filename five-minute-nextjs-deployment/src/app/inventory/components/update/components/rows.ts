@@ -9,6 +9,9 @@ const rows: InventoryItem[] = [
   new InventoryItem("주재료", "우삼겹", "바트"),
   new InventoryItem("주재료", "찌개고기", "바트"),
   new InventoryItem("주재료", "닭다리살", "바트"),
+  new InventoryItem("주재료", "수제제육소스", "바트"), //250503
+  new InventoryItem("주재료", "수제바베큐소스", "바트"), //250503
+  new InventoryItem("주재료", "김치찌개장", "바트"), //250503
   new InventoryItem("야채", "양파", "망"),
   new InventoryItem("야채", "상추", "박스"),
   new InventoryItem("야채", "두부", "팩"),
@@ -16,7 +19,7 @@ const rows: InventoryItem[] = [
   new InventoryItem("야채", "김가루", "봉지"),
   new InventoryItem("야채", "단무지", "팩"),
   new InventoryItem("야채", "생와사비", "팩"),
-  new InventoryItem("야채", "청양고추", "봉지"),//250104
+  new InventoryItem("야채", "청양고추", "봉지"), //250104
   new InventoryItem("소스", "데리야끼소스", "팩"),
   new InventoryItem("소스", "핫소스", "팩"),
   new InventoryItem("소스", "바베큐소스", "팩"),
@@ -53,6 +56,7 @@ const rows: InventoryItem[] = [
   new InventoryItem("기타식재료", "스팸", "통"),
   new InventoryItem("기타식재료", "참치", "통"),
   new InventoryItem("기타식재료", "식용유", "통"),
+  new InventoryItem("기타식재료", "슬라이스치즈", "통"), //250503
   new InventoryItem("음료", "콜라 245ml", "판"),
   new InventoryItem("음료", "사이다 245ml", "판"),
   new InventoryItem("음료", "제로콜라 335ml", "판"),
@@ -86,8 +90,13 @@ const rows: InventoryItem[] = [
   new InventoryItem("기타", "핸드워시", "개"),
   new InventoryItem("기타", "주방세재", "통"),
   new InventoryItem("기타", "영수증용지", "박스"),
-  new InventoryItem("직원간식", "커피", "개"),
-  new InventoryItem("직원간식", "깔라만씨", "개"),
+  new InventoryItem("기타", "후라이펜(파랑)", "개"), //250503
+  new InventoryItem("기타", "후라이펜(빨강)", "개"), //250503
+  new InventoryItem("기타", "후라이펜(검정)", "개"), //250503
+  new InventoryItem("기타", "쓰레기봉투", "개"), //250503
+  new InventoryItem("기타", "음쓰봉투", "개"), //250503
+  // new InventoryItem("직원간식", "커피", "개"),
+  // new InventoryItem("직원간식", "깔라만씨", "개"),
 ];
 
 export default rows;

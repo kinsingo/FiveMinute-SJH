@@ -14,7 +14,7 @@ export default async function ForgetPasswordServerAction(
     email: formData.get("email"),
   };
   try {
-    const user = await findUserByEmail(authData.email as string);
+    const user = await findUserByEmail(authData.email as string, "users");
     const resetToken = crypto.randomBytes(32).toString("hex");
     await sendResetEmail(resetToken, user.email);
     await saveTokens(resetToken, user.email);
@@ -43,7 +43,8 @@ async function sendResetEmail(resetToken: string, email: string) {
     },
   });
 
-  const logoUrl = "https://raw.githubusercontent.com/kinsingo/Img_URL/main/Five-Min-Mail-Header.PNG";
+  const logoUrl =
+    "https://raw.githubusercontent.com/kinsingo/Img_URL/main/Five-Min-Mail-Header.PNG";
   //text는 HTML을 지원하지 않는 이메일 클라이언트를 위한 백업 역할을 합니다.
   //그러므로 이메일 전송 시, text와 html을 둘 다 제공하는 것이 가장 좋습니다
   const mailOptions = {
@@ -83,7 +84,12 @@ async function sendResetEmail(resetToken: string, email: string) {
 async function saveTokens(resetToken: string, email: string) {
   const passwordResetToken = getPasswordResetToken(resetToken);
   const passwordResetExpires = new Date(Date.now() + 60 * 60 * 1000); // 1시간 유효
-  await saveResetToken(email, passwordResetToken, passwordResetExpires);
+  await saveResetToken(
+    email,
+    passwordResetToken,
+    passwordResetExpires,
+    "users"
+  );
 }
 
 function getResetLink(resetToken: string, email: string) {

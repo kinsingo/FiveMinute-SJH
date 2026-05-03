@@ -25,16 +25,16 @@
 //import Icon from "@mui/material/Icon"; 대신 아래 코드를 사용하세요.
 //import AssessmentIcon from "@mui/icons-material/Assessment";
 //import DashboardIcon from "@mui/icons-material/Dashboard";
-import KitchenIcon from '@mui/icons-material/Kitchen';
-import AccessTimeIcon  from '@mui/icons-material/AccessTime';
-import AppsIcon from '@mui/icons-material/Apps';
+import KitchenIcon from "@mui/icons-material/Kitchen";
+import AccessTimeIcon from "@mui/icons-material/AccessTime";
+import AppsIcon from "@mui/icons-material/Apps";
 //import ContactsIcon from "@mui/icons-material/Contacts";
 //import ArticleIcon from "@mui/icons-material/Article";
 
-const routes : RouteItem[] = [
+const routes: RouteItem[] = [
   {
     name: "식자재 관리",
-    icon: <KitchenIcon/>,
+    icon: <KitchenIcon />,
     columns: 2,
     rowsPerColumn: 2,
     collapse: [
@@ -64,24 +64,11 @@ const routes : RouteItem[] = [
           },
         ],
       },
-      {
-        name: "관악점",
-        collapse: [
-          {
-            name: "재고 업데이트",
-            route: "/inventory/Sinlim/update",
-          },
-          {
-            name: "재고 상태",
-            route: "/inventory/Sinlim/status",
-          },
-        ],
-      },
     ],
   },
   {
     name: "근태 관리",
-    icon: <AccessTimeIcon/>,
+    icon: <AccessTimeIcon />,
     collapse: [
       {
         name: "대시보드",
@@ -91,7 +78,7 @@ const routes : RouteItem[] = [
   },
   {
     name: "모바일앱",
-    icon: <AppsIcon/>,
+    icon: <AppsIcon />,
     collapse: [
       {
         name: "다운로드",

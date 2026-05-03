@@ -22,10 +22,9 @@ export async function GET(req: Request) {
     } else {
       return NextResponse.json(attendanceData);
     }
-  } catch (error) {
-    console.error("Error fetching previous data:", error);
+  } catch {
     return NextResponse.json(
-      { message: "Failed to fetch data" },
+      { message: "데이터를 가져오는데 실패 하였습니다" },
       { status: 500 }
     );
   }

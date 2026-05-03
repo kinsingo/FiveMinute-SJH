@@ -6,6 +6,7 @@ interface ResetPasswordProps {
   token: FormDataEntryValue | null;
   newPassword: FormDataEntryValue | null;
   confirmNewPassword: FormDataEntryValue | null;
+  collectionName: string;
 }
 
 export default async function resetPassword({
@@ -13,26 +14,31 @@ export default async function resetPassword({
   token,
   newPassword,
   confirmNewPassword,
+  collectionName,
 }: ResetPasswordProps) {
   if (!email || !token || !newPassword || !confirmNewPassword)
-    throw new Error("All inputs are required.");
+    throw new Error("모든 입력이 필요합니다.");
 
   const { isValid, message } = isValidEmail(email.toString());
   if (!isValid) {
     throw new Error(message);
   }
 
-  await findTokenValidUser(email.toString(), token.toString());
+  await findTokenValidUser(email.toString(), token.toString(), collectionName);
 
   if (!isValidText(newPassword.toString(), 8)) {
     throw new Error(
-      "Invalid new password. Must be at least 8 characters long."
+      "새로운 비밀번호가 유효하지 않습니다. 최소 8자 이상이어야 합니다."
     );
   }
-
+  
   if (!isPasswordEqual(newPassword.toString(), confirmNewPassword.toString())) {
-    throw new Error("Passwords do not match.");
+    throw new Error("비밀번호가 일치하지 않습니다.");
   }
 
-  await modifyPassword(email.toString(), newPassword.toString());
+  await modifyPassword(
+    email.toString(),
+    newPassword.toString(),
+    collectionName
+  );
 }
