@@ -64,7 +64,8 @@ const rows: InventoryItem[] = [
   new InventoryItem("음료", "콜라 500ml", "판"),
   new InventoryItem("음료", "사이다 500ml", "판"),
   new InventoryItem("음료", "물 500ml", "판"),
-  new InventoryItem("음료", "트레비 190ml", "판"),
+  new InventoryItem("음료", "트레비 190ml", "판"), //260504
+  new InventoryItem("음료", "생수 2L", "병"),
   new InventoryItem("에이드소스", "망고에이드", "통"),
   new InventoryItem("에이드소스", "레몬에이드", "통"),
   new InventoryItem("에이드소스", "청포도에이드", "통"),
@@ -95,8 +96,9 @@ const rows: InventoryItem[] = [
   new InventoryItem("기타", "후라이펜(검정)", "개"), //250503
   new InventoryItem("기타", "쓰레기봉투", "개"), //250503
   new InventoryItem("기타", "음쓰봉투", "개"), //250503
-  // new InventoryItem("직원간식", "커피", "개"),
-  // new InventoryItem("직원간식", "깔라만씨", "개"),
+  new InventoryItem("기타", "재활용봉투", "개"), //260504
+  new InventoryItem("기타", "행주", "개"), //260504
+  new InventoryItem("기타", "고무장갑", "개"), //260504
 ];
 
 export default rows;

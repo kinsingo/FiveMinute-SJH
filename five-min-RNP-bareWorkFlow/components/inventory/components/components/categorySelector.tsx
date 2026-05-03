@@ -14,7 +14,6 @@ export const categories: string[] = [
   "에이드소스",
   "포장용기",
   "기타",
-  "직원간식",
 ];
 
 interface CategorySelectorProps {
