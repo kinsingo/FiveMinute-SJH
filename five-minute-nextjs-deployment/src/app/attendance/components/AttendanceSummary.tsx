@@ -11,6 +11,7 @@ import {
   startOfMonth,
   endOfMonth,
   subDays,
+  format,
 } from "date-fns";
 import { getKoreaDate } from "@/utils/timeManager";
 import { AttendanceData } from "./AttendanceTable";
@@ -26,15 +27,21 @@ export interface SummaryData {
 
 export default function AttendanceSummary({
   attendanceData,
+  startDate,
+  endDate,
 }: {
   attendanceData: AttendanceData[];
+  startDate: Date | null;
+  endDate: Date | null;
 }) {
   const [selectedDate, setSelectedDate] = useState<Date | null>(null);
   const [summaryData, setSummaryData] = useState<SummaryData[]>([]);
   const [hourlyWage, setHourlyWage] = useState<number>(10000);
+  const hasCustomRange = Boolean(startDate || endDate);
+
   useEffect(() => {
     processWorkHoursSummary(attendanceData);
-  }, [attendanceData, selectedDate, hourlyWage]);
+  }, [attendanceData, selectedDate, hourlyWage, startDate, endDate]);
 
   const columns: Column[] = [
     { name: "기간", align: "center" },
@@ -55,18 +62,41 @@ export default function AttendanceSummary({
     })) || [];
 
   function processWorkHoursSummary(data: AttendanceData[]) {
-    const endDate = selectedDate || new Date();
+    function getSalaryInfo(workHours: string) {
+      return (parseFloat(workHours) * hourlyWage).toFixed(0) || "N/A";
+    }
 
-    const todayStr = getKoreaDate(endDate);
-    const yesterdayStr = getKoreaDate(subDays(endDate, 1));
+    if (hasCustomRange) {
+      const totalWorkHours = data
+        .reduce((sum, attendance) => sum + attendance.workHours, 0)
+        .toFixed(2);
+
+      setSummaryData([
+        {
+          period: "선택 기간",
+          startDate: startDate ? format(startDate, "yyyy-MM-dd") : "처음",
+          endDate: endDate ? format(endDate, "yyyy-MM-dd") : "현재",
+          workHours: totalWorkHours,
+          급여: getSalaryInfo(totalWorkHours),
+        },
+      ]);
+      return;
+    }
+
+    const referenceDate = selectedDate || new Date();
+
+    const todayStr = getKoreaDate(referenceDate);
+    const yesterdayStr = getKoreaDate(subDays(referenceDate, 1));
 
     // weekStartsOn: 1 옵션으로 월요일부터 일요일까지 계산 (KST 기준 적용)
-    const weekStart = getKoreaDate(startOfWeek(endDate, { weekStartsOn: 1 }));
-    const weekEnd = getKoreaDate(endOfWeek(endDate, { weekStartsOn: 1 }));
+    const weekStart = getKoreaDate(
+      startOfWeek(referenceDate, { weekStartsOn: 1 }),
+    );
+    const weekEnd = getKoreaDate(endOfWeek(referenceDate, { weekStartsOn: 1 }));
 
     //선택된 달 기준으로 시작일과 종료일 계산
-    const monthStart = getKoreaDate(startOfMonth(endDate));
-    const monthEnd = getKoreaDate(endOfMonth(endDate));
+    const monthStart = getKoreaDate(startOfMonth(referenceDate));
+    const monthEnd = getKoreaDate(endOfMonth(referenceDate));
 
     const dailyWorkHours = data
       .filter((d) => d.date === todayStr)
@@ -87,10 +117,6 @@ export default function AttendanceSummary({
       .filter((d) => d.date >= monthStart && d.date <= monthEnd)
       .reduce((sum, d) => sum + d.workHours, 0)
       .toFixed(2);
-
-    function getSalaryInfo(workHours: string) {
-      return (parseFloat(workHours) * hourlyWage).toFixed(0) || "N/A";
-    }
 
     const summary: SummaryData[] = [
       {
@@ -129,13 +155,14 @@ export default function AttendanceSummary({
     <LocalizationProvider dateAdapter={AdapterDateFns}>
       <Box flexDirection="row" display="flex">
         <DatePicker
-          label="조회할 년/월 선택"
+          label={hasCustomRange ? "기간 필터 사용 중" : "조회할 년/월 선택"}
           value={selectedDate}
           onChange={(newDate) => {
             if (newDate) {
               setSelectedDate(newDate);
             }
           }}
+          disabled={hasCustomRange}
           slotProps={{
             textField: {
               fullWidth: false,

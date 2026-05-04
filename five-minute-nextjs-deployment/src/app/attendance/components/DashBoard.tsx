@@ -5,6 +5,7 @@ import AttendanceFilter from "./AttendanceFilter";
 import { Container, Typography, Card, CardContent, Box } from "@mui/material";
 import AttendanceSummary from "./AttendanceSummary";
 import MKTypography from "@/MKcomponents/MKTypography";
+import { format } from "date-fns";
 export interface User {
   email: string;
   realname?: string; // realname이 있을 수도 있고 없을 수도 있음
@@ -17,6 +18,18 @@ export default function Dashboard({ login_email }: { login_email: string }) {
   const [isLoading, setIsLoading] = useState(false);
   const [isError, setIsError] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
+
+  const formatDate = (date: Date | null) =>
+    date ? format(date, "yyyy-MM-dd") : null;
+
+  const filteredAttendanceData = attendanceData.filter((data) => {
+    const start = formatDate(startDate);
+    const end = formatDate(endDate);
+
+    return (!start || data.date >= start) && (!end || data.date <= end);
+  });
 
   // 사용자 이메일 목록 가져오기
   useEffect(() => {
@@ -67,10 +80,15 @@ export default function Dashboard({ login_email }: { login_email: string }) {
           {!isError && (
             <AttendanceTable
               attendanceData={attendanceData}
+              filteredAttendanceData={filteredAttendanceData}
               users={users}
               setIsError={setIsError}
               setMessage={setMessage}
               login_email={login_email}
+              startDate={startDate}
+              endDate={endDate}
+              setStartDate={setStartDate}
+              setEndDate={setEndDate}
             />
           )}
         </CardContent>
@@ -78,7 +96,13 @@ export default function Dashboard({ login_email }: { login_email: string }) {
 
       <Card sx={{ mt: 3, pt: 2 }}>
         <CardContent>
-          {!isError && <AttendanceSummary attendanceData={attendanceData} />}
+          {!isError && (
+            <AttendanceSummary
+              attendanceData={filteredAttendanceData}
+              startDate={startDate}
+              endDate={endDate}
+            />
+          )}
         </CardContent>
       </Card>
     </Container>

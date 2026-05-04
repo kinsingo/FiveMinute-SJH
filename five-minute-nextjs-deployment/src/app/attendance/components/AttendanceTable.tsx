@@ -1,7 +1,6 @@
 import ResultTable from "@/components/resultTable";
 import * as React from "react";
 import { useState, useEffect } from "react";
-import { format } from "date-fns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { Alert, Box } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
@@ -25,23 +24,29 @@ export interface AttendanceData {
 
 export default function AttendanceTable({
   attendanceData,
+  filteredAttendanceData,
   users,
   setIsError,
   setMessage,
   login_email,
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
 }: {
   attendanceData: AttendanceData[];
+  filteredAttendanceData: AttendanceData[];
   users: User[];
   setIsError: (isError: boolean) => void;
   setMessage: (message: string) => void;
   login_email: string;
+  startDate: Date | null;
+  endDate: Date | null;
+  setStartDate: (date: Date | null) => void;
+  setEndDate: (date: Date | null) => void;
 }) {
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [hourlyWage, setHourlyWage] = useState<number>(10000);
-  const formatDate = (date: Date | null) =>
-    date ? format(date, "yyyy-MM-dd") : null;
   const [editableData, setEditableData] = useState<AttendanceData[]>([]);
   const [editDialogOpen, setEditDialogOpen] = useState(false);
   const [editTarget, setEditTarget] = useState<{
@@ -50,7 +55,7 @@ export default function AttendanceTable({
     value: string;
   } | null>(null);
   const isAdmin = users.some(
-    (user) => user.email === login_email && user.isAdmin
+    (user) => user.email === login_email && user.isAdmin,
   );
 
   // 📌 날짜 유효성 검사 (endDate가 startDate보다 빠를 경우 경고)
@@ -62,28 +67,18 @@ export default function AttendanceTable({
     }
   }, [startDate, endDate]);
 
-  // 📌 기간 내 데이터 필터링
-  const filteredData = attendanceData.filter((data) => {
-    const dataDate = data.date; // 이미 YYYY-MM-DD 형식으로 저장됨
-    const start = formatDate(startDate);
-    const end = formatDate(endDate);
-    return (!start || dataDate >= start) && (!end || dataDate <= end);
-  });
-
   useEffect(() => {
-    if (editableData.length === 0 && filteredData.length > 0) {
-      setEditableData(filteredData);
-    }
-  }, [filteredData]);
+    setEditableData(filteredAttendanceData);
+  }, [filteredAttendanceData]);
 
   const handleEdit = async (
     date: string,
     field: "checkIn" | "checkOut",
-    newValue: string[]
+    newValue: string[],
   ) => {
     try {
       const selectedUser = users.find(
-        (user) => user.email === attendanceData[0]?.email
+        (user) => user.email === attendanceData[0]?.email,
       );
       const response = await fetch("/api/react-native-app-attendance", {
         method: "PATCH",
@@ -102,10 +97,10 @@ export default function AttendanceTable({
             const updated = { ...entry, [field]: newValue };
             updated.workHours = calculateWorkHours(
               updated.checkIn,
-              updated.checkOut
+              updated.checkOut,
             );
             return updated;
-          })
+          }),
         );
         alert("✅ 데이터 수정 성공");
       } else {
@@ -123,7 +118,7 @@ export default function AttendanceTable({
     editableData,
     isAdmin,
     hourlyWage,
-    filteredData,
+    filteredData: filteredAttendanceData,
     setEditDialogOpen,
     setEditTarget,
   });

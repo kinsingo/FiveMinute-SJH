@@ -3,10 +3,10 @@ import { Card, CardContent, Typography, Box, Grid } from "@mui/material";
 import AndroidIcon from "@mui/icons-material/Android";
 import AppleIcon from "@mui/icons-material/Apple";
 
-//100MB 미만일 경우, Github에 업로드하여 다운로드 가능
-//나중에 100MB 넘어가게 되면 AWS S3에 업로드하여 다운로드 가능 (Presigned URL 사용)
-const ANDROID_APP_URL = "https://firebasestorage.googleapis.com/v0/b/fiveminutedonburi.firebasestorage.app/o/_5min.apk?alt=media&token=9f27395a-558e-4c7f-b384-60930a1e7c34";
-const IOS_APP_URL = "https://apps.apple.com/us/app/fiveminutericebowl/id6742189608";
+const ANDROID_APP_URL =
+  "https://firebasestorage.googleapis.com/v0/b/fiveminutedonburi.firebasestorage.app/o/_5min.apk?alt=media&token=9f27395a-558e-4c7f-b384-60930a1e7c34";
+const IOS_APP_URL =
+  "https://apps.apple.com/us/app/fiveminutericebowl/id6742189608";
 import MKButton from "@/MKcomponents/MKButton";
 
 export default function MobileDownloadPage() {
@@ -58,7 +58,7 @@ export default function MobileDownloadPage() {
             </Grid>
           </Grid>
         </CardContent>
-       <Typography variant="h6" fontWeight="bold" gutterBottom>
+        <Typography variant="h6" fontWeight="bold" gutterBottom>
           ✅ Android 보안 설정 변경
         </Typography>
         <Typography variant="body2" color="textSecondary" mb={1}>
