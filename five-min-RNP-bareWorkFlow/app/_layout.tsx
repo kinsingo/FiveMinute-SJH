@@ -124,6 +124,10 @@ export default function RootLayout() {
                   <Drawer.Screen name="(tabs)" options={{ title: "5분덮밥" }} />
                   <Drawer.Screen name="attendance" options={{ title: "근태관리" }} />
                   <Drawer.Screen name="calendar" options={{ title: "공유 캘린더" }} />
+                  <Drawer.Screen
+                    name="cost-calculator"
+                    options={{ title: "전화주문 가격계산기" }}
+                  />
                   <Drawer.Screen name="inventory" options={{ title: "재고관리" }} />
                   <Drawer.Screen name="todo" options={{ title: "소통방" }} />
                   <Drawer.Screen name="account" options={{ title: "계정관리" }} />

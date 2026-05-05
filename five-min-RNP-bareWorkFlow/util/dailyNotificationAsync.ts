@@ -16,8 +16,9 @@ const isInventoryNotification = (notification: Notifications.NotificationRequest
 };
 
 // 앱을 한 번이라도 실행해 권한을 허용한 사용자는 로그인 상태와 무관하게 매일 오후 3시에 알림을 받음
+// 권한이 없는 경우 앱 실행 시마다 다시 요청 (OS에서 "다시 묻지 않음" 처리된 경우 팝업은 표시되지 않음)
 export const scheduleDailyInventoryNotification = async () => {
-  const { status } = await Notifications.getPermissionsAsync();
+  const { status } = await Notifications.requestPermissionsAsync();
 
   if (status !== "granted") {
     console.log("[재고 관리] 알림 권한이 없어 예약을 건너뜁니다.");
